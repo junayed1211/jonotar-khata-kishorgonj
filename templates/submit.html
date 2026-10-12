@@ -13,30 +13,42 @@
         .form-group { margin-bottom: 20px; }
         label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 15px; }
         select, textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 15px; box-sizing: border-box; font-family: inherit; }
-        select:focus, textarea:focus { border-color: #000; outline: none; }
         
         .btn-submit { background: #000; color: #fff; padding: 14px 28px; border: none; font-weight: bold; font-size: 16px; cursor: pointer; border-radius: 4px; transition: 0.2s; width: 100%; }
         .btn-submit:hover { background: #333; }
         
         .privacy-warning { background: #fff8d6; border-left: 4px solid #ffd700; padding: 12px; font-size: 13px; color: #555; margin-bottom: 20px; }
+        
+        /* 🔔 নোটিফিকেশন বার */
+        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 15px; border-radius: 4px; margin-bottom: 20px; font-weight: bold; font-size: 15px; text-align: center; }
         .back-link { display: inline-block; margin-top: 15px; color: #000; text-decoration: underline; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div class="form-container">
-        <h2> অনিয়ম বা হয়রানির রিপোর্ট জমা দিন</h2>
-        <p class="subtitle">আপনার পরিচয় সম্পূর্ণ গোপন থাকবে। নির্ভয়ে সত্য তথ্য লিখুন।</p>
+        <h2>📝 অনিয়ম বা হয়রানির রিপোর্ট জমা দিন</h2>
+        <p class="subtitle">আপনার নাম, নম্বর বা পরিচয় সম্পূর্ণ গোপন থাকবে। নির্ভয়ে সত্য তথ্য লিখুন।</p>
+
+        <!-- 📢 সাবমিট করার পর নোটিফিকেশন মেসেজ -->
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert-success">
+                ✅ {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
 
         <div class="privacy-warning">
-             <strong>গোপনীয়তার নিশ্চয়তা:</strong> এই ফর্মে কোনো নাম, মোবাইল নম্বর বা ইমেইল সংগ্রহ করা হয় না।
+            🔒 <strong>গোপনীয়তার নিশ্চয়তা:</strong> এই ফর্মে কোনো নাম, মোবাইল নম্বর বা ইমেইল সংগ্রহ করা হয় না।
         </div>
 
         <form action="/submit" method="POST">
             
-            <!-- 1. Thana Selection -->
             <div class="form-group">
-                <label for="thana"> উপজেলা / থানা নির্বাচন করুন:</label>
+                <label for="thana">📍 উপজেলা / থানা নির্বাচন করুন:</label>
                 <select name="thana" id="thana" required>
                     <option value="" disabled selected>-- উপজেলা সিলেক্ট করুন --</option>
                     <option value="কিশোরগঞ্জ সদর">কিশোরগঞ্জ সদর</option>
@@ -55,11 +67,10 @@
                 </select>
             </div>
 
-            <!-- 2. Sector / Category Selection -->
             <div class="form-group">
                 <label for="category">🏢 অনিয়মের দপ্তর / খাত নির্বাচন করুন:</label>
                 <select name="category" id="category" required>
-                    <option value="" disabled selected> দপ্তর সিলেক্ট করুন </option>
+                    <option value="" disabled selected>-- দপ্তর সিলেক্ট করুন --</option>
                     <option value="পাসপোর্ট অফিস">পাসপোর্ট অফিস</option>
                     <option value="হাসপাতাল / স্বাস্থ্য কেন্দ্র">হাসপাতাল / স্বাস্থ্য কেন্দ্র</option>
                     <option value="ভূমি অফিস / এসিল্যান্ড অফিস">ভূমি অফিস / এসিল্যান্ড অফিস</option>
@@ -68,11 +79,10 @@
                     <option value="উপজেলা পরিষদ / ইউনিয়ন পরিষদ">উপজেলা / ইউনিয়ন পরিষদ</option>
                     <option value="শিক্ষা প্রতিষ্ঠান">শিক্ষা প্রতিষ্ঠান</option>
                     <option value="বিআরটিএ / পরিবহন">বিআরটিএ / পরিবহন</option>
-                    <option value="অন্যান্য">অন্যান্য </option>
+                    <option value="অন্যান্য খাত">অন্যান্য খাত</option>
                 </select>
             </div>
 
-            <!-- 3. Report Content -->
             <div class="form-group">
                 <label for="content">✍️ আপনার অভিযোগের বিবরণ লিখুন:</label>
                 <textarea name="content" id="content" rows="6" placeholder="কী ঘটেছিল, কত টাকা ঘুষ চাওয়া হয়েছে বা কীভাবে হয়রানি করা হয়েছে তার বিবরণ স্পষ্ট করে লিখুন..." required></textarea>
