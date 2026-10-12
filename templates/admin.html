@@ -69,5 +69,13 @@
         <br><br>
         <a href="/" style="color: #000; font-weight: bold; text-decoration: underline;">← মূল ওয়েবসাইট দেখুন</a>
     </div>
+    <!-- অ্যাডমিন প্যানেল নোটিশ আপডেট বক্স -->
+<div style="background: #fff; border: 1px solid #000; padding: 20px; margin-bottom: 25px; box-shadow: 3px 3px 0px #000;">
+    <h3 style="margin-top: 0; font-size: 18px;">📢 রানিং নোটিশ (News Ticker) পরিবর্তন করুন</h3>
+    <form action="/admin/update-notice" method="POST" style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <input type="text" name="notice_text" value="{{ notice.content if notice else '' }}" placeholder="এখানে নতুন নোটিশ লিখুন..." style="flex: 1; padding: 10px; border: 1px solid #ccc; font-size: 14px; min-width: 250px;" required>
+        <button type="submit" style="padding: 10px 20px; background: #ffd700; color: #000; border: 1px solid #000; font-weight: bold; cursor: pointer;">আপডেট করুন</button>
+    </form>
+</div>
 </body>
 </html>
