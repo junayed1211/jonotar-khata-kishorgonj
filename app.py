@@ -6,8 +6,8 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 app.secret_key = 'jonotar_khata_secret_key_123'
 
-# Supabase Direct Connection Database Configuration (Exact URI)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:JunayedDb2026@db.bdxyvdbsyelpdstczaxh.supabase.co:5432/postgres'
+# Supabase Transaction Pooler Configuration (Port 6543)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres.bdxyvdbsyelpdstczaxh:JunayedDb2026@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -69,7 +69,7 @@ def format_bengali_datetime(dt):
     hour_bn = convert_to_bengali_digits(hour_12)
     minute_bn = convert_to_bengali_digits(f"{minute:02d}")
     
-    return f"{day}ই {month}, {year} • {ampm} {hour_bn}:{minute_bn}"
+    return f"{day}ই সাধারণ, {year} • {ampm} {hour_bn}:{minute_bn}"
 
 # Routes
 @app.route('/')
@@ -114,9 +114,9 @@ def index():
 
     if total_all_votes > 0:
         rating_all_val = round((all_true_votes / total_all_votes) * 100)
-        rating_all = f"{convert_to_bengali_digits(rating_all_val)}% সত্য"
+        rating_all = f"{convert_to_bengali_digits(rating_all_val)}% sotty"
     else:
-        rating_all = "১০০% সত্য"
+        rating_all = "100% sotty"
 
     thirty_days_ago = datetime.utcnow() - timedelta(days=30)
     monthly_posts = Post.query.filter((Post.status == 'approved') | (Post.status == None), Post.created_at >= thirty_days_ago).all()
@@ -128,20 +128,20 @@ def index():
 
     if total_m_votes > 0:
         rating_monthly_val = round((m_true_votes / total_m_votes) * 100)
-        rating_monthly = f"{convert_to_bengali_digits(rating_monthly_val)}% সত্য"
+        rating_monthly = f"{convert_to_bengali_digits(rating_monthly_val)}% sotty"
     else:
-        rating_monthly = "১০০% সত্য"
+        rating_monthly = "100% sotty"
 
     cat_counts = {}
     for p in monthly_posts:
         cat_counts[p.category] = cat_counts.get(p.category, 0) + 1
 
-    top_sector_monthly = max(cat_counts, key=cat_counts.get) if cat_counts else "তথ্য নেই"
+    top_sector_monthly = max(cat_counts, key=cat_counts.get) if cat_counts else "thotho nei"
 
     all_cat_counts = {}
     for p in all_approved:
         all_cat_counts[p.category] = all_cat_counts.get(p.category, 0) + 1
-    top_sector_all = max(all_cat_counts, key=all_cat_counts.get) if all_cat_counts else "তথ্য নেই"
+    top_sector_all = max(all_cat_counts, key=all_cat_counts.get) if all_cat_counts else "thotho nei"
 
     dept_analytics = []
     if monthly_count > 0:
@@ -180,7 +180,7 @@ def submit():
             db.session.add(new_post)
             db.session.commit()
             
-            flash('আপনার রিপোর্টটি সফলভাবে জমা হয়েছে! অনুমোদনের জন্য অ্যাডমিনের কাছে পাঠানো হয়েছে।')
+            flash('Apnar report-ti safolvabe joma hoyeche!')
             return redirect(url_for('submit'))
             
     return render_template('submit.html')
@@ -206,7 +206,7 @@ def admin():
             session['admin_logged_in'] = True
             return redirect(url_for('admin'))
         else:
-            return render_template('admin.html', error="ভুল ইউজারনেম বা পাসওয়ার্ড!", notice=notice)
+            return render_template('admin.html', error="Vul username ba password!", notice=notice)
 
     if not session.get('admin_logged_in'):
         return render_template('admin.html', show_login=True, notice=notice)
