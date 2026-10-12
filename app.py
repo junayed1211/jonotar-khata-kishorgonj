@@ -7,7 +7,7 @@ app = Flask(__name__)
 app.secret_key = 'jonotar_khata_secret_key_123'
 
 # Supabase Direct Connection Database Configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:JunayedDb2026@db.bdxyvdbsyelpdstczaxh.supabase.co:5432/postgres'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres.bdxyvdbstcxzxh:JunayedDb2026@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
