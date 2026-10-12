@@ -1,18 +1,18 @@
 import os
 from datetime import datetime, timedelta
 from flask import Flask, render_template, request, redirect, url_for, session
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
 
-# SQLite Database Setup
+# Database Configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy(app)
 
-# Post Model
+# Database Models
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     category = db.Column(db.String(100), nullable=False)
@@ -23,22 +23,21 @@ class Post(db.Model):
     false_votes = db.Column(db.Integer, default=0)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-# Notice Model (চলমান নোটিশের জন্য)
 class Notice(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
 
+# Create Tables & Initial Notice
 with app.app_context():
     db.create_all()
-    # ডিফল্ট নোটিশ না থাকলে একটি তৈরি করে নেওয়া
     if not Notice.query.first():
-        default_notice = Notice(content="জনতার খাতা - কিশোরগঞ্জ প্ল্যাটফর্মে আপনাকে স্বাগতম। দুর্নীতি ও অনিয়মের বিরুদ্ধে সরوب হোন।")
+        default_notice = Notice(content="জনতার খাতা - কিশোরগঞ্জ প্ল্যাটফর্মে আপনাকে স্বাগতম। দুর্নীতি ও অনিয়মের বিরুদ্ধে সরব হোন।")
         db.session.add(default_notice)
         db.session.commit()
 
-# বাংলা সংখ্যা ও সময় কনভার্টার হেল্পার
+# Helper Functions
 def convert_to_bengali_digits(text):
-    if not text:
+    if text is None:
         return ""
     english_to_bengali = str.maketrans("0123456789", "০১২৩৪৫৬৭৮৯")
     return str(text).translate(english_to_bengali)
@@ -46,8 +45,7 @@ def convert_to_bengali_digits(text):
 def format_bengali_datetime(dt):
     if not dt:
         return ""
-    # বাংলাদেশ সময় (UTC + 6 hours)
-    bd_time = dt + timedelta(hours=6)
+    bd_time = dt + timedelta(hours=6)  # UTC +6
     
     months = {
         1: 'জানুয়ারি', 2: 'ফেব্রুয়ারি', 3: 'মার্চ', 4: 'এপ্রিল',
@@ -73,27 +71,21 @@ def format_bengali_datetime(dt):
     
     return f"{day}ই {month}, {year} • {ampm} {hour_bn}:{minute_bn}"
 
+# Routes
 @app.route('/')
 def index():
     selected_thana = request.args.get('thana')
-    
-    # নোটিশ ফেচ করা
     notice = Notice.query.first()
     
-    # টোটাল কাউন্ট
     total_count = Post.query.filter_by(status='approved').count()
     
-    # থানা লেজার লিস্ট
     thanas = [
-        "কিশোরগঞ্জ সদর", "হোসেনপুর", "پاکুন্দিয়া", "কটিয়াদী", 
+        "কিশোরগঞ্জ সদর", "হোসেনপুর", "পাকুন্দিয়া", "কটিয়াদী", 
         "করিমগঞ্জ", "তাড়াইল", "বাজিতপুর", "কুলিয়ারচর", 
-        "ভৈরব", "নিকላይ (নিকলী)", "অষ্টগ্রাম", "ইটনা", "মিঠামইন"
+        "ভৈরব", "নিকলী", "অষ্টগ্রাম", "ইটনা", "মিঠামইন"
     ]
     
-    thana_counts = {}
-    for t in thanas:
-        c = Post.query.filter_by(status='approved', thana=t).count()
-        thana_counts[t] = c
+    thana_counts = {t: Post.query.filter_by(status='approved', thana=t).count() for t in thanas}
 
     if selected_thana and selected_thana != 'all':
         posts_query = Post.query.filter_by(status='approved', thana=selected_thana).order_by(Post.id.desc()).all()
@@ -115,28 +107,44 @@ def index():
             'created_at_bn': format_bengali_datetime(p.created_at)
         })
 
-    # মাসিক হিসাব (গত ৩০ দিন)
+    # ১. সর্বমোট সততা রেটিং
+    all_approved = Post.query.filter_by(status='approved').all()
+    all_true_votes = sum(p.true_votes for p in all_approved)
+    all_false_votes = sum(p.false_votes for p in all_approved)
+    total_all_votes = all_true_votes + all_false_votes
+
+    if total_all_votes > 0:
+        rating_all_val = round((all_true_votes / total_all_votes) * 100)
+        rating_all = f"{convert_to_bengali_digits(rating_all_val)}% সত্য"
+    else:
+        rating_all = "১০০% সত্য"
+
+    # ২. গত ৩০ দিনের হিসাব ও সততা রেটিং
     thirty_days_ago = datetime.utcnow() - timedelta(days=30)
     monthly_posts = Post.query.filter(Post.status == 'approved', Post.created_at >= thirty_days_ago).all()
     monthly_count = len(monthly_posts)
 
-    # শীর্ষ দপ্তর ও থানা হিসাব বের করা
+    m_true_votes = sum(p.true_votes for p in monthly_posts)
+    m_false_votes = sum(p.false_votes for p in monthly_posts)
+    total_m_votes = m_true_votes + m_false_votes
+
+    if total_m_votes > 0:
+        rating_monthly_val = round((m_true_votes / total_m_votes) * 100)
+        rating_monthly = f"{convert_to_bengali_digits(rating_monthly_val)}% সত্য"
+    else:
+        rating_monthly = "১০০% সত্য"
+
     cat_counts = {}
-    thana_monthly_counts = {}
     for p in monthly_posts:
         cat_counts[p.category] = cat_counts.get(p.category, 0) + 1
-        thana_monthly_counts[p.thana] = thana_monthly_counts.get(p.thana, 0) + 1
 
     top_sector_monthly = max(cat_counts, key=cat_counts.get) if cat_counts else "তথ্য নেই"
-    top_thana_monthly = max(thana_monthly_counts, key=thana_monthly_counts.get) if thana_monthly_counts else "কিশোরগঞ্জ সদর"
 
-    all_posts = Post.query.filter_by(status='approved').all()
     all_cat_counts = {}
-    for p in all_posts:
+    for p in all_approved:
         all_cat_counts[p.category] = all_cat_counts.get(p.category, 0) + 1
     top_sector_all = max(all_cat_counts, key=all_cat_counts.get) if all_cat_counts else "তথ্য নেই"
 
-    # প্রোগ্রেস বার ডেটা তৈরি
     dept_analytics = []
     if monthly_count > 0:
         for cat, cnt in cat_counts.items():
@@ -157,9 +165,10 @@ def index():
                            monthly_count=convert_to_bengali_digits(monthly_count),
                            top_sector_monthly=top_sector_monthly,
                            top_sector_all=top_sector_all,
-                           selected_thana_monthly=top_thana_monthly,
                            dept_analytics=dept_analytics,
-                           notice=notice)
+                           notice=notice,
+                           rating_all=rating_all,
+                           rating_monthly=rating_monthly)
 
 @app.route('/submit', methods=['GET', 'POST'])
 def submit():
@@ -191,16 +200,25 @@ def admin():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
-        if username == 'admin' and password == 'admin123': # আপনার ইউজারনেম ও পাসওয়ার্ড
+        if username == 'admin' and password == 'admin123':
             session['admin_logged_in'] = True
             return redirect(url_for('admin'))
         else:
             return render_template('admin.html', error="ভুল ইউজারনেম বা পাসওয়ার্ড!", notice=notice)
-            
-    posts = Post.query.order_by(Post.id.desc()).all()
-    return render_template('admin.html', posts=posts, notice=notice)
 
-# অ্যাডমিন প্যানেল থেকে নোটিশ আপডেট করার রুট
+    if not session.get('admin_logged_in'):
+        return render_template('admin.html', show_login=True, notice=notice)
+        
+    posts = Post.query.order_by(Post.id.desc()).all()
+    approved_posts = [p for p in posts if p.status == 'approved']
+    pending_posts = [p for p in posts if p.status == 'pending']
+    
+    return render_template('admin.html', 
+                           approved_posts=approved_posts, 
+                           pending_posts=pending_posts, 
+                           notice=notice, 
+                           to_bn=convert_to_bengali_digits)
+
 @app.route('/admin/update-notice', methods=['POST'])
 def update_notice():
     if not session.get('admin_logged_in'):
