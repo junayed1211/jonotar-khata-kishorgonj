@@ -6,8 +6,8 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 app.secret_key = 'jonotar_khata_secret_key_123'
 
-# Database Configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+# Supabase PostgreSQL Database Configuration
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:আপনার_পাসওয়ার্ড@db.bdxyvdbsyelpdstczaxh.supabase.co:5432/postgres'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
