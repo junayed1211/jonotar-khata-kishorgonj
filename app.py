@@ -186,18 +186,18 @@ def vote(post_id, vote_type):
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
+    notice = Notice.query.first()
+    
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
-        if username == 'admin' and password == 'admin123': # আপনার পছন্দমতো ইউজারনেম-পাসওয়ার্ড দিতে পারেন
+        if username == 'admin' and password == 'admin123': # আপনার ইউজারনেম ও পাসওয়ার্ড
             session['admin_logged_in'] = True
             return redirect(url_for('admin'))
+        else:
+            return render_template('admin.html', error="ভুল ইউজারনেম বা পাসওয়ার্ড!", notice=notice)
             
-    if not session.get('admin_logged_in'):
-        return render_template('admin_login.html')
-        
     posts = Post.query.order_by(Post.id.desc()).all()
-    notice = Notice.query.first()
     return render_template('admin.html', posts=posts, notice=notice)
 
 # অ্যাডমিন প্যানেল থেকে নোটিশ আপডেট করার রুট
