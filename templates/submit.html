@@ -3,70 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>রিপোর্ট লিখুন - জনতার খাতা</title>
+    <title>ঘুষ বা হয়রানির রিপোর্ট জমা দিন - জনতার খাতা</title>
     <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f4f0; margin: 40px 0; color: #111; }
-        .form-container { background: #fff; max-width: 600px; margin: 0 auto; padding: 35px; border: 1px solid #000; box-shadow: 4px 4px 0px #000; }
-        h2 { margin-top: 0; font-size: 24px; }
-        label { font-weight: bold; display: block; margin-top: 15px; margin-bottom: 5px; font-size: 14px; }
-        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 2px; box-sizing: border-box; font-size: 15px; background: #fafafa; }
-        input:focus, select:focus, textarea:focus { border-color: #000; outline: none; background: #fff; }
-        button { background: #000; color: #fff; border: none; padding: 14px 24px; font-size: 16px; font-weight: bold; border-radius: 2px; cursor: pointer; margin-top: 20px; width: 100%; }
-        button:hover { background: #333; }
-        .back-link { display: inline-block; margin-top: 20px; color: #000; text-decoration: underline; font-weight: bold; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f4f0; margin: 0; padding: 20px; color: #111; }
+        .form-container { max-width: 650px; background: #fff; border: 1px solid #000; padding: 30px; margin: 30px auto; box-shadow: 4px 4px 0px #000; }
+        h2 { margin-top: 0; font-size: 24px; border-bottom: 2px solid #ffd700; padding-bottom: 10px; }
+        p.subtitle { color: #555; font-size: 14px; margin-bottom: 25px; }
         
-        .alert-success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 2px;
-            font-weight: bold;
-            font-size: 15px;
-        }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 15px; }
+        select, textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 15px; box-sizing: border-box; font-family: inherit; }
+        select:focus, textarea:focus { border-color: #000; outline: none; }
+        
+        .btn-submit { background: #000; color: #fff; padding: 14px 28px; border: none; font-weight: bold; font-size: 16px; cursor: pointer; border-radius: 4px; transition: 0.2s; width: 100%; }
+        .btn-submit:hover { background: #333; }
+        
+        .privacy-warning { background: #fff8d6; border-left: 4px solid #ffd700; padding: 12px; font-size: 13px; color: #555; margin-bottom: 20px; }
+        .back-link { display: inline-block; margin-top: 15px; color: #000; text-decoration: underline; font-weight: bold; }
     </style>
 </head>
 <body>
+
     <div class="form-container">
-        <h2>বেনামী ঘুষ বা হয়রানির রিপোর্ট জমা দিন</h2>
-        <p style="color: #666; font-size: 14px;">আপনার পরিচয় সম্পূর্ণ গোপন থাকবে। কোনো লগইন বা ইমেইল লাগবে না।</p>
+        <h2>📝 অনিয়ম বা হয়রানির রিপোর্ট জমা দিন</h2>
+        <p class="subtitle">আপনার নাম, নম্বর বা পরিচয় সম্পূর্ণ গোপন থাকবে। নির্ভয়ে সত্য তথ্য লিখুন।</p>
 
-        <!-- Green Flash Message -->
-        {% with messages = get_flashed_messages(with_categories=true) %}
-          {% if messages %}
-            {% for category, message in messages %}
-              <div class="alert-success">
-                ✅ {{ message }}
-              </div>
-            {% endfor %}
-          {% endif %}
-        {% endwith %}
-        
-        <form method="POST">
-            <label>কিশোরগঞ্জ জেলার থানা বা উপজেলা নির্বাচন করুন:</label>
-            <select name="thana" required>
-                <option value="">-- থানা সিলেক্ট করুন --</option>
-                {% for thana in thanas %}
-                    <option value="{{ thana }}">{{ thana }}</option>
-                {% endfor %}
-            </select>
+        <div class="privacy-warning">
+            🔒 <strong>গোপনীয়তার নিশ্চয়তা:</strong> এই ফর্মে কোনো নাম, মোবাইল নম্বর বা ইমেইল সংগ্রহ করা হয় না।
+        </div>
 
-            <label>দপ্তর / সেবার নাম নির্বাচন করুন:</label>
-            <select name="category" required>
-                <option value="">-- দপ্তর বা খাতের নাম নির্বাচন করুন --</option>
-                {% for dept in departments %}
-                    <option value="{{ dept }}">{{ dept }}</option>
-                {% endfor %}
-            </select>
+        <form action="/submit" method="POST">
+            
+            <!-- ১. উপজেলা/থানা নির্বাচন -->
+            <div class="form-group">
+                <label for="thana">📍 উপজেলা / থানা নির্বাচন করুন:</label>
+                <select name="thana" id="thana" required>
+                    <option value="" disabled selected>-- উপজেলা সিলেক্ট করুন --</option>
+                    <option value="কিশোরগঞ্জ সদর">কিশোরগঞ্জ সদর</option>
+                    <option value="হোসেনপুর">হোসেনপুর</option>
+                    <option value="পাকুন্দিয়া">পাকুন্দিয়া</option>
+                    <option value="কটিয়াদী">কটিয়াদী</option>
+                    <option value="করিমগঞ্জ">করিমগঞ্জ</option>
+                    <option value="তাড়াইল">তাড়াইল</option>
+                    <option value="বাজিতপুর">বাজিতপুর</option>
+                    <option value="কুলিয়ারচর">কুলিয়ারচর</option>
+                    <option value="ভৈরব">ভৈরব</option>
+                    <option value="নিকলী">নিকলী</option>
+                    <option value="অষ্টগ্রাম">অষ্টগ্রাম</option>
+                    <option value="ইটনা">ইটনা</option>
+                    <option value="মিঠামইন">মিঠামইন</option>
+                </select>
+            </div>
 
-            <label>ঘটনার বিস্তারিত বিবরণ (কী ধরনের হয়রানি বা কত টাকা ঘুষের দাবি করা হয়েছিল):</label>
-            <textarea name="content" rows="6" required placeholder="এখানে আপনার ঘটনার বিস্তারিত লিখুন..."></textarea>
+            <!-- ২. অনিয়মের দপ্তর নির্বাচন -->
+            <div class="form-group">
+                <label for="category">🏢 অনিয়মের দপ্তর / খাত নির্বাচন করুন:</label>
+                <select name="category" id="category" required>
+                    <option value="" disabled selected>-- দপ্তর সিলেক্ট করুন --</option>
+                    <option value="পাসপোর্ট অফিস">পাসপোর্ট অফিস</option>
+                    <option value="হাসপাতাল / স্বাস্থ্য কেন্দ্র">হাসপাতাল / স্বাস্থ্য কেন্দ্র</option>
+                    <option value="ভূমি অফিস / এসিল্যান্ড অফিস">ভূমি অফিস / এসিল্যান্ড অফিস</option>
+                    <option value="পুলিশ / থানা সেবা">পুলিশ / থানা সেবা</option>
+                    <option value="বিদ্যুৎ অফিস (পল্লী বিদ্যুৎ/পাওয়ার জেন)">বিদ্যুৎ অফিস</option>
+                    <option value="উপজেলা পরিষদ / ইউনিয়ন পরিষদ">উপজেলা / ইউনিয়ন পরিষদ</option>
+                    <option value="শিক্ষা প্রতিষ্ঠান / প্রাথমিক ও মাধ্যমিক">শিক্ষা প্রতিষ্ঠান</option>
+                    <option value="সড়ক ও পরিবহন / বিআরটিএ (BRTA)">বিআরটিএ / পরিবহন</option>
+                    <option value="অন্যান্য সরকারি/বেসরকারি খাত">অন্যান্য খাত</option>
+                </select>
+            </div>
 
-            <button type="submit">জনতার খাতায় জমা দিন (Submit for Approval)</button>
+            <!-- ৩. অভিযোগের বিস্তারিত -->
+            <div class="form-group">
+                <label for="content">✍️ আপনার অভিযোগের বিবরণ লিখুন:</label>
+                <textarea name="content" id="content" rows="6" placeholder="কী ঘটেছিল, কত টাকা ঘুষ চাওয়া হয়েছে বা কীভাবে হয়রানি করা হয়েছে তার বিবরণ স্পষ্ট করে লিখুন..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit">রিপোর্ট জমা দিন →</button>
         </form>
-        
-        <a href="/" class="back-link">← হোম পেজে ফিরে যান</a>
+
+        <a href="/" class="back-link">← হোমপেজে ফিরে যান</a>
     </div>
+
 </body>
 </html>
