@@ -19,7 +19,6 @@
         .btn-black { background: #000; color: #fff !important; padding: 10px 20px; text-decoration: none; font-weight: bold; border-radius: 4px; transition: 0.3s; display: inline-block; }
         .btn-black:hover { background: #333; }
 
-        /* Running News Ticker Style */
         .notice-ticker { background: #b30000; color: #fff; padding: 10px 5%; font-weight: bold; font-size: 14px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #800000; }
         .notice-badge { background: #ffd700; color: #000; padding: 3px 8px; border-radius: 3px; font-size: 12px; white-space: nowrap; }
         
@@ -27,7 +26,6 @@
         .hero h1 { font-size: 36px; line-height: 1.3; font-weight: 800; max-width: 900px; margin-top: 5px; }
         .highlight { background: #ffd700; padding: 0 6px; }
 
-        /* Stats Grid */
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid #ccc; background: #fff; margin: 0 5% 40px 5%; max-width: 1200px; }
         .stat-box { padding: 20px; border-right: 1px solid #ccc; }
         .stat-box:last-child { border-right: none; }
@@ -38,13 +36,11 @@
         .main-container { display: flex; gap: 40px; padding: 0 5% 50px 5%; max-width: 1200px; margin: 0 auto; }
         .content-area { flex: 2; width: 100%; }
         
-        /* Sidebar Ledger */
         .sidebar { flex: 1; background: #fff; border: 1px solid #ccc; padding: 20px; height: fit-content; border-radius: 2px; }
         .sidebar h3 { border-bottom: 2px solid #000; padding-bottom: 8px; margin-top: 0; font-size: 18px; }
         .thana-item { display: flex; justify-content: space-between; padding: 12px 10px; border-bottom: 1px solid #eee; text-decoration: none; color: #333; font-size: 15px; }
         .thana-item:hover { background: #fff8d6; color: #000; font-weight: bold; }
 
-        /* Monthly Analytics */
         .monthly-section { background: #fff; border: 1px solid #ccc; padding: 30px; border-radius: 2px; margin-bottom: 40px; }
         .monthly-header h2 { font-size: 30px; margin: 0 0 5px 0; font-weight: 800; }
         .monthly-header h2 span { background: #ffd700; padding: 0 6px; }
@@ -63,4 +59,265 @@
 
         .bar-container { margin-bottom: 15px; }
         .bar-label { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 5px; }
-        .progress-bg { background: #ddd; height: 10px; border-radius: 5px; overflow
+        .progress-bg { background: #ddd; height: 10px; border-radius: 5px; overflow: hidden; }
+        .progress-fill { background: #000; height: 100%; border-radius: 5px; }
+
+        .report-card { background: #fff; border: 1px solid #000; margin-bottom: 35px; box-shadow: 3px 3px 0px #000; }
+
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { background: #fff; width: 90%; max-width: 600px; padding: 30px; border-radius: 4px; position: relative; max-height: 80vh; overflow-y: auto; }
+        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; font-weight: bold; }
+        .privacy-box { background: #f9f9f9; padding: 15px; border-left: 4px solid #ffd700; margin-bottom: 15px; }
+
+        @media (max-width: 768px) {
+            header { flex-direction: column; align-items: flex-start; padding: 15px; }
+            nav { width: 100%; justify-content: space-between; gap: 10px; font-size: 13px; }
+            .btn-black { padding: 8px 12px; font-size: 13px; text-align: center; width: 100%; box-sizing: border-box; }
+            
+            .hero h1 { font-size: 24px; }
+            
+            .stats-grid { grid-template-columns: repeat(2, 1fr); margin: 0 5% 20px 5%; }
+            .stat-box { border-bottom: 1px solid #ccc; }
+            .stat-box:nth-child(2) { border-right: none; }
+            
+            .main-container { flex-direction: column; gap: 25px; }
+            
+            .monthly-grid { grid-template-columns: repeat(2, 1fr); }
+            .m-box { border-bottom: 1px solid #000; }
+            .m-box:nth-child(2) { border-right: none; }
+            
+            .analytics-subgrid { grid-template-columns: 1fr; }
+            
+            .report-card div[style*="justify-content: space-between"] {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="/" class="logo">জনতার খাতা <span>কিশোরগঞ্জ</span></a>
+        <nav>
+            <a href="#recent-reports">রিপোর্ট</a>
+            <a href="#monthly-analytics">মাসিক রিপোর্ট</a>
+            <a onclick="openPrivacyModal()">গোপনীয়তা</a>
+            <a href="/submit" class="btn-black">ঘুষ বা হয়রানির রিপোর্ট করুন →</a>
+        </nav>
+    </header>
+
+    <div class="notice-ticker">
+        <span class="notice-badge">জরুরি নোটিশ</span>
+        <marquee behavior="scroll" direction="left" onmouseover="this.stop();" onmouseout="this.start();">
+            📢 {{ notice.content if notice else 'জনতার খাতা - কিশোরগঞ্জ প্ল্যাটফর্মে আপনাকে স্বাগতম। দুর্নীতি ও অনিয়মের বিরুদ্ধে সরব হোন।' }}
+        </marquee>
+    </div>
+
+    <div class="hero">
+        <h1>চুপ থাকা মানে <span class="highlight">অনিয়মকে প্রশ্রয় দেওয়া।</span> কিশোরগঞ্জের অনিয়মগুলো এবার <span class="highlight">খাতায় উঠুক।</span></h1>
+    </div>
+
+    <!-- সর্বমোট পরিসংখ্যানের বক্স -->
+    <div class="stats-grid">
+        <div class="stat-box stat-yellow">
+            <div class="title">সর্বমোট অনুমোদিত রিপোর্ট</div>
+            <div class="value">{{ total_count }}টি</div>
+        </div>
+        <div class="stat-box">
+            <div class="title">সক্রিয় থানা লেজার</div>
+            <div class="value">১৩টি উপজেলা</div>
+        </div>
+        <div class="stat-box">
+            <div class="title">সর্বমোট প্রধান অনিয়মের খাত</div>
+            <div class="value">{{ top_sector_all }}</div>
+        </div>
+        <div class="stat-box">
+            <div class="title">জনতার সততা রেটিং (সর্বমোট)</div>
+            <div class="value">{{ rating_all }}</div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        
+        <div class="content-area">
+            
+            <!-- ৩০ দিনের হিসাব -->
+            <div id="monthly-analytics" class="monthly-section">
+                <div class="monthly-header">
+                    <h2>ত্রিশ দিনের <span>রিপোর্ট করা দাবি।</span></h2>
+                    <p>গত ৩০ দিনের প্রকাশিত বেনামী অভিযোগগুলোর পরিমাণ, ফলাফল এবং কোথায় রিপোর্ট বেশি জমা হয়েছে তা দেখতে একত্র করা হয়েছে।</p>
+                </div>
+
+                <div class="monthly-grid">
+                    <div class="m-box">
+                        <div class="m-title">প্রকাশিত রিপোর্ট (৩০ দিন)</div>
+                        <div class="m-val">{{ monthly_count }}টি</div>
+                    </div>
+                    <div class="m-box">
+                        <div class="m-title">শীর্ষ অভিযোগের এলাকা (৩০ দিন)</div>
+                        <div class="m-val" style="font-size: 18px;">{{ selected_thana if selected_thana else "কিশোরগঞ্জ সদর" }}</div>
+                    </div>
+                    <div class="m-box m-highlight">
+                        <div class="m-title">শীর্ষ অনিয়মের দপ্তর (৩০ দিন)</div>
+                        <div class="m-val" style="font-size: 18px;">{{ top_sector_monthly }}</div>
+                    </div>
+                    <div class="m-box">
+                        <div class="m-title">জনতার সততা রেটিং (৩০ দিন)</div>
+                        <div class="m-val">{{ rating_monthly }}</div>
+                    </div>
+                </div>
+
+                <div class="analytics-subgrid">
+                    <div class="sub-card">
+                        <h4>📊 দপ্তরের অনুপাত ও বিন্যাস (৩০ দিন)</h4>
+                        <p style="font-size: 12px; color: #666; margin-bottom: 15px;">গত ১ মাসে কোন দপ্তরে কী পরিমাণ অভিযোগ এসেছে:</p>
+                        
+                        {% if dept_analytics %}
+                            {% for dept in dept_analytics %}
+                                <div class="bar-container">
+                                    <div class="bar-label">
+                                        <span>🏢 {{ dept.name }}</span>
+                                        <span>{{ dept.count }}টি ({{ dept.percentage }}%)</span>
+                                    </div>
+                                    <div class="progress-bg">
+                                        <div class="progress-fill" style="width: {{ dept.raw_percentage }}%;"></div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p style="color: #777; font-size: 13px;">গত ১ মাসে কোনো ডাটা নেই।</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="sub-card">
+                        <h4>ℹ️ ডেটা পর্যালোচনার নিয়ম</h4>
+                        <p style="font-size: 13px; line-height: 1.6; color: #444; margin-top: 10px;">
+                            কিশোরগঞ্জ জেলার ১৩টি উপজেলার বিভিন্ন দপ্তরের অনিয়ম ও হয়রানির তথ্য এখানে গত ত্রিশ দিনের রোলিং উইন্ডো হিসেবে স্বয়ংক্রিয়ভাবে আপডেট হয়। প্রতিটি ঘটনা সত্যতা যাচাইয়ের জন্য পাবলিক ভোটিং সিস্টেম রয়েছে।
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- সাম্প্রতিক লাইভ রিপোর্টসমূহ -->
+            <div id="recent-reports">
+                <h3 style="font-size: 20px; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 25px;">
+                    📝 সাম্প্রতিক লাইভ রিপোর্টসমূহ 
+                    {% if selected_thana %} - <span style="color: #d9534f;">{{ selected_thana }}</span> {% endif %}
+                </h3>
+
+                {% for post in posts %}
+                    <div class="report-card">
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #000; padding: 12px 18px; background: #fafafa;">
+                            <div>
+                                <span style="background: #ffd700; color: #000; font-weight: bold; padding: 4px 10px; border: 1px solid #000; margin-right: 8px;">#{{ post.index }}</span>
+                                <span style="background: #fff; border: 1px solid #000; padding: 4px 12px; font-weight: bold; font-size: 13px;">{{ post.category }}</span>
+                            </div>
+                            <div style="font-size: 13px; color: #333; font-weight: 700;">
+                                📍 {{ post.thana }}
+                            </div>
+                        </div>
+
+                        <div style="padding: 22px;">
+                            <div style="margin-bottom: 12px;">
+                                <span style="background: #ffeeba; color: #856404; border: 1px solid #ffe8a1; padding: 3px 8px; font-size: 12px; font-weight: bold;">অযাচাইকৃত</span>
+                                <span style="background: #e2e3e5; color: #383d41; padding: 3px 8px; font-size: 12px; font-weight: bold; margin-left: 5px;">জনতার দাবি</span>
+                            </div>
+
+                            <h3 style="margin: 0 0 10px 0; font-size: 20px; font-weight: 800; color: #000;">
+                                {{ post.category }} সংক্রান্ত অভিযোগ
+                            </h3>
+
+                            <p style="margin: 0 0 15px 0; font-size: 13px; color: #555; font-weight: 600;">
+                                📍 {{ post.thana }}, কিশোরগঞ্জ জেলা • ID: #{{ post.id }}
+                            </p>
+
+                            <p style="margin: 0; font-size: 16px; line-height: 1.6; color: #111; font-style: italic; font-family: Georgia, serif; background: #fdfdfd; padding: 15px; border-left: 4px solid #000;">
+                                “{{ post.content }}”
+                            </p>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #000; background: #f9f9f9; padding: 12px 18px;">
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                <a href="/vote/{{ post.raw_id }}/true" style="text-decoration: none; background: #ffd700; color: #000; font-weight: 800; padding: 8px 15px; border: 1px solid #000; font-size: 14px; display: inline-block;">
+                                    ▲ এই রিপোর্ট সত্য <span style="background: #000; color: #fff; padding: 2px 7px; margin-left: 5px; font-size: 12px;">{{ post.true_votes }}</span>
+                                </a>
+                                
+                                <a href="/vote/{{ post.raw_id }}/false" style="text-decoration: none; background: #fff; color: #cc0000; font-weight: 800; padding: 8px 12px; border: 1px solid #ccc; font-size: 13px; display: inline-block;">
+                                    ✖ মিথ্যা ({{ post.false_votes }})
+                                </a>
+                            </div>
+
+                            <div style="font-size: 13px; color: #444; font-weight: 700;">
+                                🕒 {{ post.created_at_bn }}
+                            </div>
+                        </div>
+
+                    </div>
+                {% else %}
+                    <div style="background: #fff; border: 1px solid #000; padding: 35px; text-align: center; margin-bottom: 30px;">
+                        <p style="margin: 0; font-weight: bold; color: #555; font-size: 16px;">এই মুহূর্তে কোনো লাইভ রিপোর্ট নেই। আপনি নিজে একটি রিপোর্ট সাবমিট করতে পারেন!</p>
+                    </div>
+                {% endfor %}
+            </div>
+
+        </div>
+
+        <div class="sidebar">
+            <h3>কিশোরগঞ্জ থানা লেজার</h3>
+            <a href="/" class="thana-item" style="font-weight: bold; background: #ffd700;">
+                <span>সকল থানা / উপজেলা</span>
+                <span>({{ total_count }})</span>
+            </a>
+            {% for thana in thanas %}
+                <a href="/?thana={{ thana }}#recent-reports" class="thana-item">
+                    <span>📍 {{ thana }}</span>
+                    <span>({{ thana_counts[thana] }})</span>
+                </a>
+            {% endfor %}
+        </div>
+
+    </div>
+
+    <div id="privacyModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closePrivacyModal()">&times;</span>
+            <h2 style="margin-top: 0; border-bottom: 2px solid #ffd700; padding-bottom: 8px;">গোপনীয়তা ও নীতিমালা</h2>
+            
+            <div class="privacy-box">
+                <h4 style="margin: 0 0 5px 0; color: #28a745;">✅ আমরা যা যা করি না:</h4>
+                <ul style="margin: 5px 0; padding-left: 20px; font-size: 14px; line-height: 1.6;">
+                    <li>নাম, ইমেইল, ফোন নম্বর বা কোনো অ্যাকাউন্ট ট্র্যাক করা হয় না।</li>
+                    <li>রিপোর্ট দিতে কোনো সাইন-আপ বা লগইন লাগে না।</li>
+                </ul>
+            </div>
+
+            <div class="privacy-box" style="border-left-color: #000;">
+                <h4 style="margin: 0 0 5px 0; color: #000;">📋 আমরা যা সংগ্রহ করি:</h4>
+                <ul style="margin: 5px 0; padding-left: 20px; font-size: 14px; line-height: 1.6;">
+                    <li>শুধু উপজেলা ও দপ্তরের বিবরণ।</li>
+                    <li>একটি ডিভাইস থেকে যেন বারবার ভোট বা স্প্যাম না করা যায়, সেজন্য ব্রাউজারে অস্থায়ী কুকি সংরক্ষণ করা হয়।</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openPrivacyModal() {
+            document.getElementById('privacyModal').style.display = 'flex';
+        }
+        function closePrivacyModal() {
+            document.getElementById('privacyModal').style.display = 'none';
+        }
+        window.onclick = function(event) {
+            var modal = document.getElementById('privacyModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+
+</body>
+</html>
