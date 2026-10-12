@@ -1,10 +1,10 @@
 import os
 from datetime import datetime, timedelta
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key_here'
+app.secret_key = 'jonotar_khata_secret_key_123'
 
 # Database Configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -45,7 +45,7 @@ def convert_to_bengali_digits(text):
 def format_bengali_datetime(dt):
     if not dt:
         return ""
-    bd_time = dt + timedelta(hours=6)  # UTC +6
+    bd_time = dt + timedelta(hours=6)
     
     months = {
         1: 'জানুয়ারি', 2: 'ফেব্রুয়ারি', 3: 'মার্চ', 4: 'এপ্রিল',
@@ -77,7 +77,7 @@ def index():
     selected_thana = request.args.get('thana')
     notice = Notice.query.first()
     
-    total_count = Post.query.filter_by(status='approved').count()
+    total_count = Post.query.filter((Post.status == 'approved') | (Post.status == None)).count()
     
     thanas = [
         "কিশোরগঞ্জ সদর", "হোসেনপুর", "পাকুন্দিয়া", "কটিয়াদী", 
@@ -85,12 +85,12 @@ def index():
         "ভৈরব", "নিকলী", "অষ্টগ্রাম", "ইটনা", "মিঠামইন"
     ]
     
-    thana_counts = {t: Post.query.filter_by(status='approved', thana=t).count() for t in thanas}
+    thana_counts = {t: Post.query.filter((Post.status == 'approved') | (Post.status == None), Post.thana == t).count() for t in thanas}
 
     if selected_thana and selected_thana != 'all':
-        posts_query = Post.query.filter_by(status='approved', thana=selected_thana).order_by(Post.id.desc()).all()
+        posts_query = Post.query.filter((Post.status == 'approved') | (Post.status == None), Post.thana == selected_thana).order_by(Post.id.desc()).all()
     else:
-        posts_query = Post.query.filter_by(status='approved').order_by(Post.id.desc()).all()
+        posts_query = Post.query.filter((Post.status == 'approved') | (Post.status == None)).order_by(Post.id.desc()).all()
 
     posts = []
     total_posts_len = len(posts_query)
@@ -108,7 +108,7 @@ def index():
         })
 
     # ১. সর্বমোট সততা রেটিং
-    all_approved = Post.query.filter_by(status='approved').all()
+    all_approved = Post.query.filter((Post.status == 'approved') | (Post.status == None)).all()
     all_true_votes = sum(p.true_votes for p in all_approved)
     all_false_votes = sum(p.false_votes for p in all_approved)
     total_all_votes = all_true_votes + all_false_votes
@@ -119,9 +119,9 @@ def index():
     else:
         rating_all = "১০০% সত্য"
 
-    # ২. গত ৩০ দিনের হিসাব ও সততা রেটিং
+    # ২. ৩০ দিনের সততা রেটিং
     thirty_days_ago = datetime.utcnow() - timedelta(days=30)
-    monthly_posts = Post.query.filter(Post.status == 'approved', Post.created_at >= thirty_days_ago).all()
+    monthly_posts = Post.query.filter((Post.status == 'approved') | (Post.status == None), Post.created_at >= thirty_days_ago).all()
     monthly_count = len(monthly_posts)
 
     m_true_votes = sum(p.true_votes for p in monthly_posts)
@@ -170,6 +170,7 @@ def index():
                            rating_all=rating_all,
                            rating_monthly=rating_monthly)
 
+# 📝 নতুন রিপোর্ট জমা নেওয়ার রুট (নোটিফিকেশন সহ)
 @app.route('/submit', methods=['GET', 'POST'])
 def submit():
     if request.method == 'POST':
@@ -177,10 +178,15 @@ def submit():
         thana = request.form.get('thana')
         content = request.form.get('content')
         
-        new_post = Post(category=category, thana=thana, content=content, status='pending')
-        db.session.add(new_post)
-        db.session.commit()
-        return redirect(url_for('index'))
+        if category and thana and content:
+            new_post = Post(category=category, thana=thana, content=content, status='pending')
+            db.session.add(new_post)
+            db.session.commit()
+            
+            # ইউজারকে বার্তা দেখাবে
+            flash('আপনার রিপোর্টটি সফলভাবে জমা হয়েছে! অনুমোদনের জন্য অ্যাডমিনের কাছে পাঠানো হয়েছে।')
+            return redirect(url_for('submit'))
+            
     return render_template('submit.html')
 
 @app.route('/vote/<int:post_id>/<vote_type>')
@@ -193,6 +199,7 @@ def vote(post_id, vote_type):
     db.session.commit()
     return redirect(url_for('index'))
 
+# 🔐 অ্যাডমিন প্যানেল (সকল পোস্ট দেখার ও ডিলিট করার লজিক)
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
     notice = Notice.query.first()
@@ -210,9 +217,11 @@ def admin():
         return render_template('admin.html', show_login=True, notice=notice)
         
     posts = Post.query.order_by(Post.id.desc()).all()
-    approved_posts = [p for p in posts if p.status == 'approved']
-    pending_posts = [p for p in posts if p.status == 'pending']
     
+    # পেন্ডিং ও অ্যাপ্রুভড পোস্ট ফিল্টার (আগের ৮টি পোস্ট সহ)
+    pending_posts = [p for p in posts if p.status == 'pending']
+    approved_posts = [p for p in posts if p.status == 'approved' or p.status == None or p.status == '']
+
     return render_template('admin.html', 
                            approved_posts=approved_posts, 
                            pending_posts=pending_posts, 
