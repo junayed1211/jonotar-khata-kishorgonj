@@ -107,7 +107,6 @@ def index():
             'created_at_bn': format_bengali_datetime(p.created_at)
         })
 
-    # ১. সর্বমোট সততা রেটিং
     all_approved = Post.query.filter((Post.status == 'approved') | (Post.status == None)).all()
     all_true_votes = sum(p.true_votes for p in all_approved)
     all_false_votes = sum(p.false_votes for p in all_approved)
@@ -119,7 +118,6 @@ def index():
     else:
         rating_all = "১০০% সত্য"
 
-    # ২. ৩০ দিনের সততা রেটিং
     thirty_days_ago = datetime.utcnow() - timedelta(days=30)
     monthly_posts = Post.query.filter((Post.status == 'approved') | (Post.status == None), Post.created_at >= thirty_days_ago).all()
     monthly_count = len(monthly_posts)
@@ -170,7 +168,6 @@ def index():
                            rating_all=rating_all,
                            rating_monthly=rating_monthly)
 
-# 📝 নতুন রিপোর্ট জমা নেওয়ার রুট (নোটিফিকেশন সহ)
 @app.route('/submit', methods=['GET', 'POST'])
 def submit():
     if request.method == 'POST':
@@ -183,7 +180,6 @@ def submit():
             db.session.add(new_post)
             db.session.commit()
             
-            # ইউজারকে বার্তা দেখাবে
             flash('আপনার রিপোর্টটি সফলভাবে জমা হয়েছে! অনুমোদনের জন্য অ্যাডমিনের কাছে পাঠানো হয়েছে।')
             return redirect(url_for('submit'))
             
@@ -199,7 +195,6 @@ def vote(post_id, vote_type):
     db.session.commit()
     return redirect(url_for('index'))
 
-# 🔐 অ্যাডমিন প্যানেল (সকল পোস্ট দেখার ও ডিলিট করার লজিক)
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
     notice = Notice.query.first()
@@ -216,11 +211,10 @@ def admin():
     if not session.get('admin_logged_in'):
         return render_template('admin.html', show_login=True, notice=notice)
         
-    posts = Post.query.order_by(Post.id.desc()).all()
+    all_posts = Post.query.order_by(Post.id.desc()).all()
     
-    # পেন্ডিং ও অ্যাপ্রুভড পোস্ট ফিল্টার (আগের ৮টি পোস্ট সহ)
-    pending_posts = [p for p in posts if p.status == 'pending']
-    approved_posts = [p for p in posts if p.status == 'approved' or p.status == None or p.status == '']
+    pending_posts = [p for p in all_posts if p.status == 'pending']
+    approved_posts = [p for p in all_posts if p.status == 'approved' or p.status == None or p.status == '']
 
     return render_template('admin.html', 
                            approved_posts=approved_posts, 
