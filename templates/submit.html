@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>রিপোর্ট লিখুন - জনতার খাতা</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f4f0; margin: 40px 0; color: #111; }
+        .form-container { background: #fff; max-width: 600px; margin: 0 auto; padding: 35px; border: 1px solid #000; box-shadow: 4px 4px 0px #000; }
+        h2 { margin-top: 0; font-size: 24px; }
+        label { font-weight: bold; display: block; margin-top: 15px; margin-bottom: 5px; font-size: 14px; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 2px; box-sizing: border-box; font-size: 15px; background: #fafafa; }
+        input:focus, select:focus, textarea:focus { border-color: #000; outline: none; background: #fff; }
+        button { background: #000; color: #fff; border: none; padding: 14px 24px; font-size: 16px; font-weight: bold; border-radius: 2px; cursor: pointer; margin-top: 20px; width: 100%; }
+        button:hover { background: #333; }
+        .back-link { display: inline-block; margin-top: 20px; color: #000; text-decoration: underline; font-weight: bold; }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 2px;
+            font-weight: bold;
+            font-size: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>বেনামী ঘুষ বা হয়রানির রিপোর্ট জমা দিন</h2>
+        <p style="color: #666; font-size: 14px;">আপনার পরিচয় সম্পূর্ণ গোপন থাকবে। কোনো লগইন বা ইমেইল লাগবে না।</p>
+
+        <!-- Green Flash Message -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert-success">
+                ✅ {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+        
+        <form method="POST">
+            <label>কিশোরগঞ্জ জেলার থানা বা উপজেলা নির্বাচন করুন:</label>
+            <select name="thana" required>
+                <option value="">-- থানা সিলেক্ট করুন --</option>
+                {% for thana in thanas %}
+                    <option value="{{ thana }}">{{ thana }}</option>
+                {% endfor %}
+            </select>
+
+            <label>দপ্তর / সেবার নাম নির্বাচন করুন:</label>
+            <select name="category" required>
+                <option value="">-- দপ্তর বা খাতের নাম নির্বাচন করুন --</option>
+                {% for dept in departments %}
+                    <option value="{{ dept }}">{{ dept }}</option>
+                {% endfor %}
+            </select>
+
+            <label>ঘটনার বিস্তারিত বিবরণ (কী ধরনের হয়রানি বা কত টাকা ঘুষের দাবি করা হয়েছিল):</label>
+            <textarea name="content" rows="6" required placeholder="এখানে আপনার ঘটনার বিস্তারিত লিখুন..."></textarea>
+
+            <button type="submit">জনতার খাতায় জমা দিন (Submit for Approval)</button>
+        </form>
+        
+        <a href="/" class="back-link">← হোম পেজে ফিরে যান</a>
+    </div>
+</body>
+</html>
