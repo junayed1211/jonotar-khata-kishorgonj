@@ -2,80 +2,100 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <title>মডারেশন ড্যাশবোর্ড - জনতার খাতা</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>অ্যাডমিন প্যানেল - জনতার খাতা</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #f5f4f0; margin: 30px; }
-        .container { max-width: 900px; margin: 0 auto; }
-        .nav-tabs { display: flex; gap: 10px; margin-bottom: 25px; border-bottom: 2px solid #000; }
-        .nav-tabs a { padding: 12px 20px; text-decoration: none; font-weight: bold; color: #000; background: #e0e0e0; border: 1px solid #000; border-bottom: none; }
-        .nav-tabs a.active { background: #ffd700; }
-        .post-card { background: #fff; padding: 20px; margin-bottom: 20px; border: 1px solid #000; box-shadow: 2px 2px 0px #000; }
-        .btn-approve { background: #28a745; color: white; padding: 8px 15px; text-decoration: none; font-weight: bold; border-radius: 2px; }
-        .btn-delete { background: #dc3545; color: white; padding: 8px 15px; text-decoration: none; font-weight: bold; border-radius: 2px; }
-        .search-box { margin-bottom: 20px; display: flex; gap: 10px; }
-        .search-box input { padding: 10px; border: 1px solid #000; width: 250px; font-size: 15px; }
-        .search-box button { padding: 10px 18px; background: #000; color: #fff; font-weight: bold; border: none; cursor: pointer; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f4f0; margin: 0; padding: 20px; color: #111; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        
+        .login-card { background: #fff; border: 1px solid #000; padding: 30px; max-width: 350px; margin: 80px auto; box-shadow: 4px 4px 0px #000; }
+        .login-card h2 { margin-top: 0; font-size: 20px; border-bottom: 2px solid #ffd700; padding-bottom: 8px; }
+        .login-card input { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; box-sizing: border-box; }
+        .login-card button { width: 100%; padding: 10px; background: #000; color: #fff; border: none; font-weight: bold; cursor: pointer; }
+
+        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 25px; }
+        
+        .box { background: #fff; border: 1px solid #000; padding: 20px; margin-bottom: 25px; box-shadow: 3px 3px 0px #000; }
+        .post-card { background: #fafafa; border: 1px solid #ccc; padding: 15px; margin-bottom: 15px; }
+        
+        .btn-approve { background: #28a745; color: white; padding: 8px 15px; text-decoration: none; font-weight: bold; display: inline-block; border-radius: 3px; }
+        .btn-delete { background: #dc3545; color: white; padding: 8px 15px; text-decoration: none; font-weight: bold; display: inline-block; border-radius: 3px; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>অ্যাডমিন মডারেশন প্যানেল</h2>
-        
-        <!-- Tab Navigation for Approve vs Delete Pages -->
-        <div class="nav-tabs">
-            <a href="/admin?tab=approve" class="{% if tab == 'approve' %}active{% endif %}">⏳ নতুন রিপোর্ট অনুমোদন (Approve)</a>
-            <a href="/admin?tab=delete" class="{% if tab == 'delete' %}active{% endif %}">🗑️ প্রকাশিত রিপোর্ট ডিলিট (Delete)</a>
+
+<div class="container">
+
+    {% if show_login %}
+        <!-- লগইন সেকশন -->
+        <div class="login-card">
+            <h2>অ্যাডমিন প্যানেল লগইন</h2>
+            {% if error %}
+                <p style="color: red; font-size: 14px;">{{ error }}</p>
+            {% endif %}
+            <form method="POST" action="/admin">
+                <label>ইউজারনেম:</label>
+                <input type="text" name="username" required>
+                
+                <label>পাসওয়ার্ড:</label>
+                <input type="password" name="password" required>
+                
+                <button type="submit">লগইন করুন</button>
+            </form>
+        </div>
+    {% else %}
+        <!-- মূল অ্যাডমিন প্যানেল -->
+        <header>
+            <h2 style="margin:0;">জনতার খাতা - অ্যাডমিন প্যানেল</h2>
+            <a href="/logout" style="color: red; font-weight: bold; text-decoration: none;">লগআউট (Logout)</a>
+        </header>
+
+        <!-- নোটিশ পরিবর্তন বক্স -->
+        <div class="box">
+            <h3 style="margin-top:0;">📢 রানিং নোটিশ (News Ticker) পরিবর্তন করুন</h3>
+            <form action="/admin/update-notice" method="POST" style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <input type="text" name="notice_text" value="{{ notice.content if notice else '' }}" placeholder="এখানে নতুন নোটিশ লিখুন..." style="flex: 1; padding: 10px; border: 1px solid #ccc;" required>
+                <button type="submit" style="padding: 10px 20px; background: #ffd700; color: #000; border: 1px solid #000; font-weight: bold; cursor: pointer;">আপডেট করুন</button>
+            </form>
         </div>
 
-        {% if tab == 'approve' %}
-            <h3>⏳ অপেক্ষমাণ নতুন রিপোর্টসমূহ</h3>
+        <!-- অপেক্ষমাণ অভিযোগসমূহ -->
+        <div class="box">
+            <h3>⏳ অনুমোদন প্রত্যাশী রিপোর্টসমূহ (Pending Reports)</h3>
             {% for post in pending_posts %}
-                <div class="post-card">
-                    <p><strong>থানা:</strong> {{ post.thana }} | <strong>দপ্তর:</strong> {{ post.category }}</p>
-                    <p style="font-size: 16px; background: #fafafa; padding: 10px; border-left: 3px solid #ffd700;">{{ post.content }}</p>
-                    <br>
-                    <a href="/admin/action/{{ post.id }}/approve" class="btn-approve">✓ অনুমোদন দিন (Publish)</a>
-                    <a href="/admin/action/{{ post.id }}/delete" class="btn-delete" style="margin-left: 10px;">✕ প্রত্যাখ্যান করুন</a>
+                <div class="post-card" style="border-left: 5px solid #ffc107;">
+                    <p><strong>আইডি:</strong> #{{ to_bn(post.id) }} | <strong>থানা:</strong> {{ post.thana }} | <strong>দপ্তর:</strong> {{ post.category }}</p>
+                    <p style="font-size: 15px; background: #fff; padding: 10px; border: 1px solid #eee;">“{{ post.content }}”</p>
+                    <div style="margin-top: 10px;">
+                        <a href="/admin/action/{{ post.id }}/approve" class="btn-approve">✅ অনুমোদন করুন (Approve)</a>
+                        <a href="/admin/action/{{ post.id }}/delete" class="btn-delete" onclick="return confirm('বাতিল করতে চান?');">❌ বাতিল করুন</a>
+                    </div>
                 </div>
             {% else %}
-                <p style="color: #666; background: #fff; padding: 15px; border: 1px solid #ccc;">এই মুহূর্তে কোনো নতুন পেন্ডিং রিপোর্ট নেই।</p>
+                <p style="color: #666;">কোনো অপেক্ষমাণ রিপোর্ট নেই।</p>
             {% endfor %}
+        </div>
 
-        {% else %}
-            <h3>🗑️ প্রকাশিত রিপোর্ট ডিলিট পেজ</h3>
-            
-            <!-- ID Search Option -->
-            <form method="GET" action="/admin" class="search-box">
-                <input type="hidden" name="tab" value="delete">
-                <input type="text" name="search_id" value="{{ search_id }}" placeholder="রিপোর্ট ID দিয়ে খুঁজুন (যেমন: #৩)">
-                <button type="submit">খুঁজুন</button>
-                {% if search_id %}
-                    <a href="/admin?tab=delete" style="padding: 10px; background: #ccc; color: #000; text-decoration: none; font-weight: bold;">সব দেখান</a>
-                {% endif %}
-            </form>
-
+        <!-- প্রকাশিত অভিযোগসমূহ -->
+        <div class="box">
+            <h3>✅ প্রকাশিত লাইভ রিপোর্টসমূহ (Approved Reports)</h3>
             {% for post in approved_posts %}
                 <div class="post-card" style="border-left: 5px solid #28a745;">
                     <p><strong>আইডি:</strong> #{{ to_bn(post.id) }} | <strong>থানা:</strong> {{ post.thana }} | <strong>দপ্তর:</strong> {{ post.category }}</p>
-                    <p style="font-size: 15px; background: #fdfdfd; padding: 10px;">{{ post.content }}</p>
-                    <br>
-                    <a href="/admin/action/{{ post.id }}/delete" class="btn-delete" onclick="return confirm('আপনি কি নিশ্চিত যে এই রিপোর্টটি ডিলিট করতে চান?');">🗑️ সাইট থেকে স্থায়ীভাবে ডিলিট করুন</a>
+                    <p style="font-size: 15px; background: #fff; padding: 10px; border: 1px solid #eee;">“{{ post.content }}”</p>
+                    <div style="margin-top: 10px;">
+                        <a href="/admin/action/{{ post.id }}/delete" class="btn-delete" onclick="return confirm('আপনি কি নিশ্চিত যে এই রিপোর্টটি ডিলিট করতে চান?');">🗑️ সাইট থেকে ডিলিট করুন</a>
+                    </div>
                 </div>
             {% else %}
-                <p style="color: #666; background: #fff; padding: 15px; border: 1px solid #ccc;">কোনো রিপোর্ট পাওয়া যায়নি।</p>
+                <p style="color: #666;">কোনো প্রকাশিত রিপোর্ট নেই।</p>
             {% endfor %}
-        {% endif %}
+        </div>
 
-        <br><br>
-        <a href="/" style="color: #000; font-weight: bold; text-decoration: underline;">← মূল ওয়েবসাইট দেখুন</a>
-    </div>
-    <!-- অ্যাডমিন প্যানেল নোটিশ আপডেট বক্স -->
-<div style="background: #fff; border: 1px solid #000; padding: 20px; margin-bottom: 25px; box-shadow: 3px 3px 0px #000;">
-    <h3 style="margin-top: 0; font-size: 18px;">📢 রানিং নোটিশ (News Ticker) পরিবর্তন করুন</h3>
-    <form action="/admin/update-notice" method="POST" style="display: flex; gap: 10px; flex-wrap: wrap;">
-        <input type="text" name="notice_text" value="{{ notice.content if notice else '' }}" placeholder="এখানে নতুন নোটিশ লিখুন..." style="flex: 1; padding: 10px; border: 1px solid #ccc; font-size: 14px; min-width: 250px;" required>
-        <button type="submit" style="padding: 10px 20px; background: #ffd700; color: #000; border: 1px solid #000; font-weight: bold; cursor: pointer;">আপডেট করুন</button>
-    </form>
+        <a href="/" style="color: #000; font-weight: bold; text-decoration: underline;">← মূল ওয়েবসাইট দেখুন</a>
+    {% endif %}
+
 </div>
+
 </body>
 </html>
