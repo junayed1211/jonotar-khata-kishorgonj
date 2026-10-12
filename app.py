@@ -193,75 +193,25 @@ def vote(post_id, vote_type):
     db.session.commit()
     return redirect(url_for('index'))
 
-# ==========================================
-# অ্যাডমিন প্যানেল রুটস (Admin Panel Routes)
-# ==========================================
-
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
     notice = Notice.query.first()
     
-    # লগইন ফর্ম সাবমিট হলে
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
-        
-        if username == 'admin' and password == 'admin123': # ইউজারনেম ও পাসওয়ার্ড
+        if username == 'admin' and password == 'admin123':
             session['admin_logged_in'] = True
             return redirect(url_for('admin'))
         else:
             return render_template('admin.html', error="ভুল ইউজারনেম বা পাসওয়ার্ড!", notice=notice)
 
-    # যদি ইউজার লগইন না করে থাকে তবে লগইন পেজ দেখাবে
     if not session.get('admin_logged_in'):
         return render_template('admin.html', show_login=True, notice=notice)
         
-    # পোস্টগুলোকে আলাদা করে ড্যাশবোর্ডে পাঠানো
     posts = Post.query.order_by(Post.id.desc()).all()
     approved_posts = [p for p in posts if p.status == 'approved']
     pending_posts = [p for p in posts if p.status == 'pending']
-
-    return render_template('admin.html', 
-                           approved_posts=approved_posts, 
-                           pending_posts=pending_posts, 
-                           notice=notice, 
-                           to_bn=convert_to_bengali_digits)
-
-# নোটিশ আপডেট করার রুট
-@app.route('/admin/update-notice', methods=['POST'])
-def update_notice():
-    if not session.get('admin_logged_in'):
-        return redirect(url_for('admin'))
-    
-    new_text = request.form.get('notice_text')
-    notice = Notice.query.first()
-    if not notice:
-        notice = Notice(content=new_text)
-        db.session.add(notice)
-    else:
-        notice.content = new_text
-    db.session.commit()
-    return redirect(url_for('admin'))
-
-# পোস্ট অনুমোদন ও ডিলিট করার রুট
-@app.route('/admin/action/<int:post_id>/<action>')
-def admin_action(post_id, action):
-    if not session.get('admin_logged_in'):
-        return redirect(url_for('admin'))
-        
-    post = Post.query.get_or_404(post_id)
-    if action == 'approve':
-        post.status = 'approved'
-    elif action == 'delete':
-        db.session.delete(post)
-    db.session.commit()
-    return redirect(url_for('admin'))
-
-# লগআউট রুট
-@app.route('/logout')
-def logout():
-    session.pop('admin_logged_in', None)
-    return redirect(url_for('admin'))
     
     return render_template('admin.html', 
                            approved_posts=approved_posts, 
