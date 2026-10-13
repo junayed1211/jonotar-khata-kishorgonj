@@ -4,11 +4,13 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app.secret_key = 'jonotar_khata_secure_secret_key_2026'
+app.secret_key = 'jonotar_khata_super_secure_key_2026_fixed'
 
 # Read Database URI from Render Environment Variables
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SESSION_COOKIE_SECURE'] = False  # Render proxy compatibility
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)
 
 db = SQLAlchemy(app)
 
@@ -51,7 +53,7 @@ def format_bengali_datetime(dt):
     bd_time = dt + timedelta(hours=6)
     
     months = {
-        1: 'জানুয়ারি', 2: 'ফেব্রুয়ারি', 3: 'মার্চ', 4: 'এপ্রিল',
+        1: 'জানুয়ারি', 2: 'ফেব্রুয়ারি', 3: 'মার্চ', 4: 'এপ্রিল',
         5: 'মে', 6: 'জুন', 7: 'জুলাই', 8: 'আগস্ট',
         9: 'সেপ্টেম্বর', 10: 'অক্টোবর', 11: 'নভেম্বর', 12: 'ডিসেম্বর'
     }
@@ -84,8 +86,8 @@ def index():
     total_count = approved_query.count()
     
     thanas = [
-        "কিশোরগঞ্জ সদর", "হোসেনপুর", "পাকুন্দিয়া", "কটিয়াদী", 
-        "করিমগঞ্জ", "তাড়াইল", "বাজিতপুর", "কুলিয়ারচর", 
+        "কিশোরগঞ্জ সদর", "হোসেনপুর", "পাকুন্দিয়া", "কটিয়াদী", 
+        "করিমগঞ্জ", "তাড়াইল", "বাজিতপুর", "কুলিয়ারচর", 
         "ভৈরব", "নিকলী", "অষ্টগ্রাম", "ইটনা", "মিঠামইন"
     ]
     
@@ -184,7 +186,7 @@ def submit():
             db.session.add(new_post)
             db.session.commit()
             
-            flash('আপনার রিপোর্টটি সফলভাবে জমা হয়েছে! অনুমোদনের জন্য অ্যাডমিনের কাছে পাঠানো হয়েছে।')
+            flash('আপনার রিপোর্টটি সফলভাবে জমা হয়েছে! অনুমোদনের জন্য অ্যাডমিনের কাছে পাঠানো হয়েছে।')
             return redirect(url_for('submit'))
             
     return render_template('submit.html')
@@ -211,14 +213,13 @@ def admin():
             session['admin_logged_in'] = True
             return redirect(url_for('admin'))
         else:
-            return render_template('admin.html', error="ভুল ইউজারনেম বা পাসওয়ার্ড!", notice=notice)
+            return render_template('admin.html', error="ভুল ইউজারনেম বা পাসওয়ার্ড!", notice=notice)
 
     if not session.get('admin_logged_in'):
         return render_template('admin.html', show_login=True, notice=notice)
         
     all_posts = Post.query.order_by(Post.id.desc()).all()
     
-    # Catch both explicit 'pending' and any legacy empty/None status items
     pending_posts = [p for p in all_posts if p.status == 'pending' or not p.status]
     approved_posts = [p for p in all_posts if p.status == 'approved']
 
