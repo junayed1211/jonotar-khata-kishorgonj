@@ -3,150 +3,282 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>প্রশাসক প্যানেল - জনতার খাতা</title>
+    <title>অ্যাডমিন প্যানেল - জনতার খাতা</title>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #111;
-            --accent: #ffd700;
-            --bg: #f8f9fa;
-            --card-bg: #fff;
-            --border: #e0e0e0;
-            --danger: #dc3545;
-            --success: #28a745;
-            --warning: #ffc107;
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
         }
-        
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); margin: 0; padding: 25px; color: var(--primary); }
-        .container { max-width: 1100px; margin: 0 auto; }
-
-        /* Login Card */
-        .login-card { background: var(--card-bg); border: 1px solid var(--primary); padding: 40px; max-width: 400px; margin: 100px auto; border-radius: 8px; box-shadow: 6px 6px 0px var(--primary); }
-        .login-card h2 { margin-top: 0; font-size: 22px; border-bottom: 3px solid var(--accent); padding-bottom: 10px; }
-        .login-card label { font-weight: 600; font-size: 14px; display: block; margin-bottom: 6px; }
-        .login-card input { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 15px; }
-        .login-card button { width: 100%; padding: 12px; background: var(--primary); color: #fff; border: none; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 15px; transition: 0.2s; }
-        .login-card button:hover { background: #333; }
-
-        /* Admin Header */
-        header { display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 20px 30px; border: 1px solid var(--primary); border-radius: 6px; margin-bottom: 30px; box-shadow: 4px 4px 0px var(--primary); }
-        header h1 { margin: 0; font-size: 22px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
-        .logout-btn { background: #fff; color: var(--danger); border: 1px solid var(--danger); padding: 8px 16px; border-radius: 4px; font-weight: bold; text-decoration: none; transition: 0.2s; }
-        .logout-btn:hover { background: var(--danger); color: #fff; }
-
-        /* Dashboard Sections */
-        .section-box { background: var(--card-bg); border: 1px solid var(--primary); padding: 25px; border-radius: 6px; margin-bottom: 30px; box-shadow: 4px 4px 0px var(--primary); }
-        .section-title { font-size: 18px; font-weight: 700; margin-top: 0; margin-bottom: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-
-        /* Notice Form */
-        .notice-form { display: flex; gap: 12px; flex-wrap: wrap; }
-        .notice-form input { flex: 1; padding: 12px 15px; border: 1px solid #ccc; border-radius: 4px; font-size: 15px; min-width: 280px; }
-        .btn-accent { background: var(--accent); color: var(--primary); border: 1px solid var(--primary); padding: 12px 24px; font-weight: bold; border-radius: 4px; cursor: pointer; transition: 0.2s; }
-        .btn-accent:hover { background: #e5c100; }
-
-        /* Post Cards */
-        .post-grid { display: grid; gap: 15px; }
-        .post-card { background: #fafafa; border: 1px solid #ccc; border-radius: 6px; padding: 20px; display: flex; flex-direction: column; gap: 12px; transition: 0.2s; }
-        .post-card:hover { border-color: var(--primary); background: #fff; }
-        
-        .post-header { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #555; font-weight: 600; border-bottom: 1px solid #eee; padding-bottom: 8px; }
-        .post-content { font-size: 16px; line-height: 1.5; color: #111; background: #fff; padding: 12px 15px; border-left: 4px solid var(--primary); margin: 0; border: 1px solid #eee; }
-
-        /* Action Buttons */
-        .action-buttons { display: flex; gap: 10px; margin-top: 5px; }
-        .btn-approve { background: var(--success); color: white; padding: 8px 16px; text-decoration: none; font-weight: bold; font-size: 13px; border-radius: 4px; display: inline-flex; align-items: center; gap: 5px; }
-        .btn-delete { background: var(--danger); color: white; padding: 8px 16px; text-decoration: none; font-weight: bold; font-size: 13px; border-radius: 4px; display: inline-flex; align-items: center; gap: 5px; }
-        .btn-approve:hover { opacity: 0.9; }
-        .btn-delete:hover { opacity: 0.9; }
-
-        .empty-text { color: #777; font-style: italic; background: #fafafa; padding: 15px; text-align: center; border: 1px dashed #ccc; border-radius: 4px; }
-        .back-link { display: inline-block; margin-top: 10px; color: var(--primary); font-weight: bold; text-decoration: none; border-bottom: 2px solid var(--primary); padding-bottom: 2px; }
-        .back-link:hover { color: var(--danger); border-color: var(--danger); }
-    </style>
+        .header {
+            background: #fff;
+            padding: 15px 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h2 {
+            margin: 0;
+            color: #d9534f;
+        }
+        .logout-btn {
+            background: #d9534f;
+            color: white;
+            padding: 8px 15px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        .logout-btn:hover {
+            background: #c9302c;
+        }
+        .main-container {
+            display: flex;
+            max-width: 1300px;
+            margin: 20px auto;
+            gap: 20px;
+            padding: 0 15px;
+        }
+        /* Sidebar Menu */
+        .sidebar {
+            width: 280px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            height: fit-content;
+        }
+        .sidebar h3 {
+            font-size: 18px;
+            margin-top: 0;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            color: #333;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar li {
+            margin-bottom: 12px;
+        }
+        .sidebar a {
+            display: block;
+            padding: 10px 15px;
+            background: #f8f9fa;
+            color: #333;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+        .sidebar a:hover, .sidebar a.active {
+            background: #d9534f;
+            color: white;
+        }
+        /* Content Area */
+        .content-area {
+            flex: 1;
+        }
+        .card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        .card h3 {
+            margin-top: 0;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            color: #333;
+        }
+        textarea, input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: 'Hind Siliguri', sans-serif;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+        .btn {
+            background: #f0ad4e;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Hind Siliguri', sans-serif;
+        }
+        .btn:hover {
+            background: #ec971f;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .table th, .table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+            font-size: 14px;
+        }
+        .table th {
+            background: #f8f9fa;
+        }
+        .action-btn {
+            padding: 5px 10px;
+            text-decoration: none;
+            color: white;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+        .btn-approve { background: #5cb85c; }
+        .btn-delete { background: #d9534f; }
+        .login-box {
+            max-width: 400px;
+            margin: 80px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .login-box input {
+            margin-bottom: 15px;
+        }
+        .error-msg {
+            color: #d9534f;
+            margin-bottom: 10px;
+        }
+    -</style>
 </head>
 <body>
 
-<div class="container">
-
     {% if show_login %}
-        <!-- প্রফেশনাল লগইন ফর্ম -->
-        <div class="login-card">
-            <h2>🔐 প্রশাসক লগইন</h2>
-            {% if error %}
-                <p style="color: var(--danger); font-size: 13px; font-weight: bold; background: #f8d7da; padding: 8px; border-radius: 4px;">{{ error }}</p>
-            {% endif %}
-            <form method="POST" action="/admin">
-                <label>ইউজারনেম</label>
-                <input type="text" name="username" placeholder="ইউজারনেম লিখুন" required>
-                
-                <label>পাসওয়ার্ড</label>
-                <input type="password" name="password" placeholder="পাসওয়ার্ড লিখুন" required>
-                
-                <button type="submit">প্রবেশ করুন</button>
-            </form>
-        </div>
+    <div class="login-box">
+        <h2>অ্যাডমিন লগইন</h2>
+        {% if error %}
+        <div class="error-msg">{{ error }}</div>
+        {% endif %}
+        <form method="POST">
+            <input type="text" name="username" placeholder="ইউজারনেম" required>
+            <input type="password" name="password" placeholder="পাসওয়ার্ড" required>
+            <button type="submit" class="btn" style="width: 100%;">লগইন করুন</button>
+        </form>
+        <p style="margin-top: 15px;"><a href="{{ url_for('index') }}" style="color: #666; text-decoration: none;">← মূল ওয়েবসাইটে ফিরে যান</a></p>
+    </div>
     {% else %}
-        <!-- মডার্ন ড্যাশবোর্ড হেডার -->
-        <header>
-            <h1>🛡️ জনতার খাতা - অ্যাডমিন ড্যাশবোর্ড</h1>
-            <a href="/logout" class="logout-btn">লগআউট (Logout)</a>
-        </header>
 
-        <!-- নোটিশ আপডেট সেকশন -->
-        <div class="section-box">
-            <h3 class="section-title">📢 রানিং নোটিশ (News Ticker) ম্যানেজমেন্ট</h3>
-            <form action="/admin/update-notice" method="POST" class="notice-form">
-                <input type="text" name="notice_text" value="{{ notice.content if notice else '' }}" placeholder="ওয়েবসাইটের হেডারে দেখানোর জন্য নতুন নোটিশ লিখুন..." required>
-                <button type="submit" class="btn-accent">নোটিশ আপডেট করুন</button>
-            </form>
+    <div class="header">
+        <h2>🏛️ জনতার খাতা - অ্যাডমিন ড্যাশবোর্ড</h2>
+        <div>
+            <a href="{{ url_for('index') }}" target="_blank" style="margin-right: 15px; text-decoration: none; color: #333; font-weight: 600;">🌐 মূল ওয়েবসাইট দেখুন</a>
+            <a href="{{ url_for('logout') }}" class="logout-btn">লগআউট (Logout)</a>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <!-- Sidebar Navigation Box -->
+        <div class="sidebar">
+            <h3>ম্যানেজমেন্ট মেনু</h3>
+            <ul>
+                <li><a href="#notice-section" class="active">📢 রানিং নোটিশ ম্যানেজমেন্ট</a></li>
+                <li><a href="#pending-section">⏳ অনুমোদন প্রত্যাশী রিপোর্ট</a></li>
+                <li><a href="#live-section">✅ প্রকাশিত লাইভ রিপোর্ট</a></li>
+            </ul>
         </div>
 
-        <!-- অনুমোদন প্রত্যাশী রিপোর্টস (Pending) -->
-        <div class="section-box" style="border-left: 6px solid var(--warning);">
-            <h3 class="section-title">⏳ অনুমোদন প্রত্যাশী রিপোর্টসমূহ (Pending Reports)</h3>
-            <div class="post-grid">
-                {% for post in pending_posts %}
-                    <div class="post-card">
-                        <div class="post-header">
-                            <span>আইডি: #{{ to_bn(post.id) }}</span>
-                            <span>উপজেলা/থানা: <strong>{{ post.thana }}</strong> | দপ্তর: <strong>{{ post.category }}</strong></span>
-                        </div>
-                        <p class="post-content">“{{ post.content }}”</p>
-                        <div class="action-buttons">
-                            <a href="/admin/action/{{ post.id }}/approve" class="btn-approve">✅ অনুমোদন করুন</a>
-                            <a href="/admin/action/{{ post.id }}/delete" class="btn-delete" onclick="return confirm('আপনি কি এই রিপোর্টটি চিরতরে মুছে ফেলতে চান?');">❌ বাতিল ও ডিলিট</a>
-                        </div>
-                    </div>
-                {% else %}
-                    <p class="empty-text">এই মুহূর্তে কোনো নতুন অপেক্ষমাণ রিপোর্ট নেই।</p>
-                {% endfor %}
+        <!-- Main Content Area -->
+        <div class="content-area">
+            
+            <!-- Notice Management -->
+            <div id="notice-section" class="card">
+                <h3>রানিং নোটিশ (News Ticker) ম্যানেজমেন্ট</h3>
+                <form action="{{ url_for('update_notice') }}" method="POST">
+                    <input type="text" name="notice_text" value="{{ notice.content if notice else '' }}" required>
+                    <button type="submit" class="btn">নোটিশ আপডেট করুন</button>
+                </form>
             </div>
-        </div>
 
-        <!-- প্রকাশিত লাইভ রিপোর্টস (Approved) -->
-        <div class="section-box" style="border-left: 6px solid var(--success);">
-            <h3 class="section-title">✅ প্রকাশিত লাইভ রিপোর্টসমূহ (Approved Live Reports)</h3>
-            <div class="post-grid">
-                {% for post in approved_posts %}
-                    <div class="post-card">
-                        <div class="post-header">
-                            <span>আইডি: #{{ to_bn(post.id) }}</span>
-                            <span>উপজেলা/থানা: <strong>{{ post.thana }}</strong> | দপ্তর: <strong>{{ post.category }}</strong></span>
-                        </div>
-                        <p class="post-content">“{{ post.content }}”</p>
-                        <div class="action-buttons">
-                            <a href="/admin/action/{{ post.id }}/delete" class="btn-delete" onclick="return confirm('সতর্কতা: আপনি কি নিশ্চিতভাবে এই প্রকাশিত রিপোর্টটি সাইট থেকে মুছে ফেলতে চান?');">🗑️ সাইট থেকে স্থায়ীভাবে ডিলিট করুন</a>
-                        </div>
-                    </div>
+            <!-- Pending Reports -->
+            <div id="pending-section" class="card" style="border-left: 4px solid #f0ad4e;">
+                <h3>অনুমোদন প্রত্যাশী রিপোর্টসমূহ (Pending Reports)</h3>
+                {% if pending_posts %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>উপজেলা</th>
+                            <th>খাত</th>
+                            <th>বিবরণ</th>
+                            <th>কার্যক্রম</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for post in pending_posts %}
+                        <tr>
+                            <td>{{ post.thana }}</td>
+                            <td>{{ post.category }}</td>
+                            <td>{{ post.content }}</td>
+                            <td>
+                                <a href="{{ url_for('admin_action', post_id=post.id, action='approve') }}" class="action-btn btn-approve">অনুমোদন দিন</a>
+                                <a href="{{ url_for('admin_action', post_id=post.id, action='delete') }}" class="action-btn btn-delete" onclick="return confirm('নিশ্চিত ডিলিট করতে চান?')">ডিলিট</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
                 {% else %}
-                    <p class="empty-text">এই মুহূর্তে কোনো প্রকাশিত লাইভ রিপোর্ট নেই। কেউ অভিযোগ জমা দিলে এবং আপনি তা এপ্রুভ করলে এখানে দেখতে পাবেন।</p>
-                {% endfor %}
+                <p style="color: #666; text-align: center;">এই মুহূর্তে কোনো নতুন অপেক্ষমান রিপোর্ট নেই।</p>
+                {% endif %}
             </div>
-        </div>
 
-        <a href="/" class="back-link">← মূল ওয়েবসাইট দেখুন</a>
+            <!-- Approved Live Reports -->
+            <div id="live-section" class="card" style="border-left: 4px solid #5cb85c;">
+                <h3>প্রকাশিত লাইভ রিপোর্টসমূহ (Approved Live Reports)</h3>
+                {% if approved_posts %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>আইডি</th>
+                            <th>উপজেলা</th>
+                            <th>খাত</th>
+                            <th>বিবরণ</th>
+                            <th>ভোট (সত্য/মিথ্যা)</th>
+                            <th>কার্যক্রম</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for post in approved_posts %}
+                        <tr>
+                            <td>{{ to_bn(post.id) }}</td>
+                            <td>{{ post.thana }}</td>
+                            <td>{{ post.category }}</td>
+                            <td>{{ post.content }}</td>
+                            <td>👍 {{ to_bn(post.true_votes) }} / 👎 {{ to_bn(post.false_votes) }}</td>
+                            <td>
+                                <a href="{{ url_for('admin_action', post_id=post.id, action='delete') }}" class="action-btn btn-delete" onclick="return confirm('এই লাইভ পোস্টটি ডিলিট করতে চান?')">ডিলিট করুন</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p style="color: #666; text-align: center;">এই মুহূর্তে কোনো প্রকাশিত লাইভ রিপোর্ট নেই। কেউ অভিযোগ জমা দিলে এবং আপনি তা এপ্রুভ করলে এখানে দেখতে পাবেন।</p>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
     {% endif %}
-
-</div>
 
 </body>
 </html>
