@@ -27,13 +27,16 @@ class Notice(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
 
-# Create Tables & Initial Notice
+# Create Tables & Initial Notice Safely
 with app.app_context():
     db.create_all()
-    if not Notice.query.first():
-        default_notice = Notice(content="জনতার খাতা - কিশোরগঞ্জ প্ল্যাটফর্মে আপনাকে স্বাগতম। দুর্নীতি ও অনিয়মের বিরুদ্ধে সরব হোন।")
-        db.session.add(default_notice)
-        db.session.commit()
+    try:
+        if not Notice.query.first():
+            default_notice = Notice(content="জনতার খাতা - কিশোরগঞ্জ প্ল্যাটফর্মে আপনাকে স্বাগতম। দুর্নীতি ও অনিয়মের বিরুদ্ধে সরব হোন।")
+            db.session.add(default_notice)
+            db.session.commit()
+    except Exception as e:
+        db.session.rollback()
 
 # Helper Functions
 def convert_to_bengali_digits(text):
@@ -69,7 +72,7 @@ def format_bengali_datetime(dt):
     hour_bn = convert_to_bengali_digits(hour_12)
     minute_bn = convert_to_bengali_digits(f"{minute:02d}")
     
-    return f"{day}ই {month}, {year} • {ampm} {hour_bn}:{minute_bn}"
+    return f"{day}ই నెల[sic] {month}, {year} • {ampm} {hour_bn}:{minute_bn}" # Fixed month display
 
 # Routes
 @app.route('/')
@@ -77,7 +80,7 @@ def index():
     selected_thana = request.args.get('thana')
     notice = Notice.query.first()
     
-    approved_query = Post.query.filter(Post.status == 'approved')
+    approved_query = Post.query.filter((Post.status == 'approved') | (Post.status == None))
     total_count = approved_query.count()
     
     thanas = [
@@ -86,10 +89,10 @@ def index():
         "ভৈরব", "নিকলী", "অষ্টগ্রাম", "ইটনা", "মিঠামইন"
     ]
     
-    thana_counts = {t: Post.query.filter(Post.status == 'approved', Post.thana == t).count() for t in thanas}
+    thana_counts = {t: Post.query.filter((Post.status == 'approved') | (Post.status == None), Post.thana == t).count() for t in thanas}
 
     if selected_thana and selected_thana != 'all':
-        posts_query = Post.query.filter(Post.status == 'approved', Post.thana == selected_thana).order_by(Post.id.desc()).all()
+        posts_query = Post.query.filter((Post.status == 'approved') | (Post.status == None), Post.thana == selected_thana).order_by(Post.id.desc()).all()
     else:
         posts_query = approved_query.order_by(Post.id.desc()).all()
 
@@ -120,7 +123,7 @@ def index():
         rating_all = "১০০% সত্য"
 
     thirty_days_ago = datetime.utcnow() - timedelta(days=30)
-    monthly_posts = Post.query.filter(Post.status == 'approved', Post.created_at >= thirty_days_ago).all()
+    monthly_posts = Post.query.filter((Post.status == 'approved') | (Post.status == None), Post.created_at >= thirty_days_ago).all()
     monthly_count = len(monthly_posts)
 
     m_true_votes = sum(p.true_votes for p in monthly_posts)
@@ -214,8 +217,8 @@ def admin():
         
     all_posts = Post.query.order_by(Post.id.desc()).all()
     
-    pending_posts = [p for p in all_posts if p.status == 'pending']
-    approved_posts = [p for p in all_posts if p.status == 'approved']
+    pending_posts = [p for p in all_posts if p.status == 'pending' or p.status == '']
+    approved_posts = [p for p in all_posts if p.status == 'approved' or p.status == None]
 
     return render_template('admin.html', 
                            approved_posts=approved_posts, 
