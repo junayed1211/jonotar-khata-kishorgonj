@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app.secret_key = 'jonotar_khata_secret_key_123'
+app.secret_key = 'jonotar_khata_secure_secret_key_2026'
 
 # Read Database URI from Render Environment Variables
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
@@ -72,7 +72,7 @@ def format_bengali_datetime(dt):
     hour_bn = convert_to_bengali_digits(hour_12)
     minute_bn = convert_to_bengali_digits(f"{minute:02d}")
     
-    return f"{day}ই నెల[sic] {month}, {year} • {ampm} {hour_bn}:{minute_bn}" # Fixed month display
+    return f"{day}ই {month}, {year} • {ampm} {hour_bn}:{minute_bn}"
 
 # Routes
 @app.route('/')
@@ -80,7 +80,7 @@ def index():
     selected_thana = request.args.get('thana')
     notice = Notice.query.first()
     
-    approved_query = Post.query.filter((Post.status == 'approved') | (Post.status == None))
+    approved_query = Post.query.filter(Post.status == 'approved')
     total_count = approved_query.count()
     
     thanas = [
@@ -89,10 +89,10 @@ def index():
         "ভৈরব", "নিকলী", "অষ্টগ্রাম", "ইটনা", "মিঠামইন"
     ]
     
-    thana_counts = {t: Post.query.filter((Post.status == 'approved') | (Post.status == None), Post.thana == t).count() for t in thanas}
+    thana_counts = {t: Post.query.filter(Post.status == 'approved', Post.thana == t).count() for t in thanas}
 
     if selected_thana and selected_thana != 'all':
-        posts_query = Post.query.filter((Post.status == 'approved') | (Post.status == None), Post.thana == selected_thana).order_by(Post.id.desc()).all()
+        posts_query = Post.query.filter(Post.status == 'approved', Post.thana == selected_thana).order_by(Post.id.desc()).all()
     else:
         posts_query = approved_query.order_by(Post.id.desc()).all()
 
@@ -123,7 +123,7 @@ def index():
         rating_all = "১০০% সত্য"
 
     thirty_days_ago = datetime.utcnow() - timedelta(days=30)
-    monthly_posts = Post.query.filter((Post.status == 'approved') | (Post.status == None), Post.created_at >= thirty_days_ago).all()
+    monthly_posts = Post.query.filter(Post.status == 'approved', Post.created_at >= thirty_days_ago).all()
     monthly_count = len(monthly_posts)
 
     m_true_votes = sum(p.true_votes for p in monthly_posts)
@@ -207,6 +207,7 @@ def admin():
         username = request.form.get('username')
         password = request.form.get('password')
         if username == 'admin' and password == 'admin123':
+            session.permanent = True
             session['admin_logged_in'] = True
             return redirect(url_for('admin'))
         else:
@@ -217,8 +218,9 @@ def admin():
         
     all_posts = Post.query.order_by(Post.id.desc()).all()
     
-    pending_posts = [p for p in all_posts if p.status == 'pending' or p.status == '']
-    approved_posts = [p for p in all_posts if p.status == 'approved' or p.status == None]
+    # Catch both explicit 'pending' and any legacy empty/None status items
+    pending_posts = [p for p in all_posts if p.status == 'pending' or not p.status]
+    approved_posts = [p for p in all_posts if p.status == 'approved']
 
     return render_template('admin.html', 
                            approved_posts=approved_posts, 
@@ -232,13 +234,14 @@ def update_notice():
         return redirect(url_for('admin'))
     
     new_text = request.form.get('notice_text')
-    notice = Notice.query.first()
-    if not notice:
-        notice = Notice(content=new_text)
-        db.session.add(notice)
-    else:
-        notice.content = new_text
-    db.session.commit()
+    if new_text:
+        notice = Notice.query.first()
+        if not notice:
+            notice = Notice(content=new_text)
+            db.session.add(notice)
+        else:
+            notice.content = new_text
+        db.session.commit()
     return redirect(url_for('admin'))
 
 @app.route('/admin/action/<int:post_id>/<action>')
