@@ -6,8 +6,8 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 app.secret_key = 'jonotar_khata_secret_key_123'
 
-# Supabase Pooler Configuration (IPv4 Compatible Port 6543)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres.bdxyvdbsyelpdstczaxh:JunayedDb2026@aws-0-ap-southeast-2.pooler.supabase.com:6543/postgres'
+# Supabase PostgreSQL Direct Configuration
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:JunayedDb2026@db.bdxyvdbsyelpdstczaxh.supabase.co:5432/postgres'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -77,7 +77,7 @@ def index():
     selected_thana = request.args.get('thana')
     notice = Notice.query.first()
     
-    approved_query = Post.query.filter((Post.status == 'approved') | (Post.status == None))
+    approved_query = Post.query.filter(Post.status == 'approved')
     total_count = approved_query.count()
     
     thanas = [
@@ -86,10 +86,10 @@ def index():
         "ভৈরব", "নিকলী", "অষ্টগ্রাম", "ইটনা", "মিঠামইন"
     ]
     
-    thana_counts = {t: Post.query.filter((Post.status == 'approved') | (Post.status == None), Post.thana == t).count() for t in thanas}
+    thana_counts = {t: Post.query.filter(Post.status == 'approved', Post.thana == t).count() for t in thanas}
 
     if selected_thana and selected_thana != 'all':
-        posts_query = Post.query.filter((Post.status == 'approved') | (Post.status == None), Post.thana == selected_thana).order_by(Post.id.desc()).all()
+        posts_query = Post.query.filter(Post.status == 'approved', Post.thana == selected_thana).order_by(Post.id.desc()).all()
     else:
         posts_query = approved_query.order_by(Post.id.desc()).all()
 
@@ -120,7 +120,7 @@ def index():
         rating_all = "১০০% সত্য"
 
     thirty_days_ago = datetime.utcnow() - timedelta(days=30)
-    monthly_posts = Post.query.filter((Post.status == 'approved') | (Post.status == None), Post.created_at >= thirty_days_ago).all()
+    monthly_posts = Post.query.filter(Post.status == 'approved', Post.created_at >= thirty_days_ago).all()
     monthly_count = len(monthly_posts)
 
     m_true_votes = sum(p.true_votes for p in monthly_posts)
@@ -215,7 +215,7 @@ def admin():
     all_posts = Post.query.order_by(Post.id.desc()).all()
     
     pending_posts = [p for p in all_posts if p.status == 'pending']
-    approved_posts = [p for p in all_posts if p.status == 'approved' or p.status == None or p.status == '']
+    approved_posts = [p for p in all_posts if p.status == 'approved']
 
     return render_template('admin.html', 
                            approved_posts=approved_posts, 
