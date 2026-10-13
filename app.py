@@ -6,8 +6,8 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 app.secret_key = 'jonotar_khata_secret_key_123'
 
-# Correct Supabase Pooler URI (Region: aws-0-ap-southeast-2)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres.bdxyvdbsyelpdstczaxh:JunayedDb2026@aws-0-ap-southeast-2.pooler.supabase.com:6543/postgres'
+# Supabase PostgreSQL Direct Configuration
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:JunayedDb2026@db.bdxyvdbsyelpdstczaxh.supabase.co:5432/postgres'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -77,7 +77,8 @@ def index():
     selected_thana = request.args.get('thana')
     notice = Notice.query.first()
     
-    total_count = Post.query.filter((Post.status == 'approved') | (Post.status == None)).count()
+    approved_query = Post.query.filter((Post.status == 'approved') | (Post.status == None))
+    total_count = approved_query.count()
     
     thanas = [
         "কিশোরগঞ্জ সদর", "হোসেনপুর", "পাকুন্দিয়া", "কটিয়াদী", 
@@ -90,7 +91,7 @@ def index():
     if selected_thana and selected_thana != 'all':
         posts_query = Post.query.filter((Post.status == 'approved') | (Post.status == None), Post.thana == selected_thana).order_by(Post.id.desc()).all()
     else:
-        posts_query = Post.query.filter((Post.status == 'approved') | (Post.status == None)).order_by(Post.id.desc()).all()
+        posts_query = approved_query.order_by(Post.id.desc()).all()
 
     posts = []
     total_posts_len = len(posts_query)
@@ -107,7 +108,7 @@ def index():
             'created_at_bn': format_bengali_datetime(p.created_at)
         })
 
-    all_approved = Post.query.filter((Post.status == 'approved') | (Post.status == None)).all()
+    all_approved = approved_query.all()
     all_true_votes = sum(p.true_votes for p in all_approved)
     all_false_votes = sum(p.false_votes for p in all_approved)
     total_all_votes = all_true_votes + all_false_votes
