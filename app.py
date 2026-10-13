@@ -4,32 +4,33 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app.secret_key = 'jonotar_khata_super_secure_key_2026_fixed'
+app.secret_key = 'jonotar_khata_final_fix_2026'
 
-# Read Database URI from Render Environment Variables
+# Database Configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SESSION_COOKIE_SECURE'] = False  # Render proxy compatibility
-app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)
+app.config['SESSION_COOKIE_NAME'] = 'jonotar_admin_session'
 
 db = SQLAlchemy(app)
 
 # Database Models
 class Post(db.Model):
+    __tablename__ = 'post'
     id = db.Column(db.Integer, primary_key=True)
     category = db.Column(db.String(100), nullable=False)
     thana = db.Column(db.String(100), nullable=False)
     content = db.Column(db.Text, nullable=False)
-    status = db.Column(db.String(20), default='pending')  # pending, approved
+    status = db.Column(db.String(20), default='pending')
     true_votes = db.Column(db.Integer, default=0)
     false_votes = db.Column(db.Integer, default=0)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 class Notice(db.Model):
+    __tablename__ = 'notice'
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
 
-# Create Tables & Initial Notice Safely
+# Safe Table Initialization
 with app.app_context():
     db.create_all()
     try:
@@ -209,7 +210,6 @@ def admin():
         username = request.form.get('username')
         password = request.form.get('password')
         if username == 'admin' and password == 'admin123':
-            session.permanent = True
             session['admin_logged_in'] = True
             return redirect(url_for('admin'))
         else:
@@ -218,8 +218,8 @@ def admin():
     if not session.get('admin_logged_in'):
         return render_template('admin.html', show_login=True, notice=notice)
         
+    # Query all posts and explicitly categorize them based on status
     all_posts = Post.query.order_by(Post.id.desc()).all()
-    
     pending_posts = [p for p in all_posts if p.status == 'pending' or not p.status]
     approved_posts = [p for p in all_posts if p.status == 'approved']
 
