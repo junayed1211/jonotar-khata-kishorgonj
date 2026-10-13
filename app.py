@@ -6,8 +6,8 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 app.secret_key = 'jonotar_khata_secret_key_123'
 
-# Supabase PostgreSQL Direct Configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:JunayedDb2026@db.bdxyvdbsyelpdstczaxh.supabase.co:5432/postgres'
+# Supabase Pooler Configuration (IPv4 Compatible Port 6543, Sydney Region)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres.bdxyvdbsyelpdstczaxh:JunayedDb2026@aws-0-ap-southeast-2.pooler.supabase.com:6543/postgres'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -222,40 +222,3 @@ def admin():
                            pending_posts=pending_posts, 
                            notice=notice, 
                            to_bn=convert_to_bengali_digits)
-
-@app.route('/admin/update-notice', methods=['POST'])
-def update_notice():
-    if not session.get('admin_logged_in'):
-        return redirect(url_for('admin'))
-    
-    new_text = request.form.get('notice_text')
-    notice = Notice.query.first()
-    if not notice:
-        notice = Notice(content=new_text)
-        db.session.add(notice)
-    else:
-        notice.content = new_text
-    db.session.commit()
-    return redirect(url_for('admin'))
-
-@app.route('/admin/action/<int:post_id>/<action>')
-def admin_action(post_id, action):
-    if not session.get('admin_logged_in'):
-        return redirect(url_for('admin'))
-        
-    post = Post.query.get_or_404(post_id)
-    if action == 'approve':
-        post.status = 'approved'
-    elif action == 'delete':
-        db.session.delete(post)
-    db.session.commit()
-    return redirect(url_for('admin'))
-
-@app.route('/logout')
-def logout():
-    session.pop('admin_logged_in', None)
-    return redirect(url_for('admin'))
-
-if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
