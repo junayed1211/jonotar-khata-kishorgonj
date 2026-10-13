@@ -6,8 +6,8 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 app.secret_key = 'jonotar_khata_secret_key_123'
 
-# Supabase PostgreSQL Direct Configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:JunayedDb2026@db.bdxyvdbsyelpdstczaxh.supabase.co:5432/postgres'
+# Supabase Pooler Configuration (IPv4 Compatible Port 6543)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres.bdxyvdbsyelpdstczaxh:JunayedDb2026@aws-0-ap-southeast-2.pooler.supabase.com:6543/postgres'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
