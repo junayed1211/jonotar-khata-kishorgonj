@@ -4,281 +4,160 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>অ্যাডমিন প্যানেল - জনতার খাতা</title>
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Hind Siliguri', sans-serif;
-            background-color: #f4f6f9;
-            margin: 0;
-            padding: 0;
-        }
-        .header {
-            background: #fff;
-            padding: 15px 30px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .header h2 {
-            margin: 0;
-            color: #d9534f;
-        }
-        .logout-btn {
-            background: #d9534f;
-            color: white;
-            padding: 8px 15px;
-            text-decoration: none;
-            border-radius: 4px;
-            font-weight: 600;
-        }
-        .logout-btn:hover {
-            background: #c9302c;
-        }
-        .main-container {
-            display: flex;
-            max-width: 1300px;
-            margin: 20px auto;
-            gap: 20px;
-            padding: 0 15px;
-        }
-        /* Sidebar Menu */
-        .sidebar {
-            width: 280px;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            height: fit-content;
-        }
-        .sidebar h3 {
-            font-size: 18px;
-            margin-top: 0;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 10px;
-            color: #333;
-        }
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .sidebar li {
-            margin-bottom: 12px;
-        }
-        .sidebar a {
-            display: block;
-            padding: 10px 15px;
-            background: #f8f9fa;
-            color: #333;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: 600;
-            transition: 0.2s;
-        }
-        .sidebar a:hover, .sidebar a.active {
-            background: #d9534f;
-            color: white;
-        }
-        /* Content Area */
-        .content-area {
-            flex: 1;
-        }
-        .card {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
-        }
-        .card h3 {
-            margin-top: 0;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-            color: #333;
-        }
-        textarea, input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-family: 'Hind Siliguri', sans-serif;
-            margin-bottom: 10px;
-            box-sizing: border-box;
-        }
-        .btn {
-            background: #f0ad4e;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 600;
-            font-family: 'Hind Siliguri', sans-serif;
-        }
-        .btn:hover {
-            background: #ec971f;
-        }
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-        .table th, .table td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: left;
-            font-size: 14px;
-        }
-        .table th {
-            background: #f8f9fa;
-        }
-        .action-btn {
-            padding: 5px 10px;
-            text-decoration: none;
-            color: white;
-            border-radius: 3px;
-            font-size: 12px;
-            margin-right: 5px;
-        }
-        .btn-approve { background: #5cb85c; }
-        .btn-delete { background: #d9534f; }
-        .login-box {
-            max-width: 400px;
-            margin: 80px auto;
-            background: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        .login-box input {
-            margin-bottom: 15px;
-        }
-        .error-msg {
-            color: #d9534f;
-            margin-bottom: 10px;
-        }
-    -</style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Hind Siliguri', sans-serif; }</style>
 </head>
-<body>
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen">
+    
+    <div class="max-w-5xl mx-auto px-4 py-8">
+        {% if show_login %}
+            <div class="max-w-md mx-auto mt-20 bg-white border border-slate-200 p-8 rounded-3xl shadow-lg">
+                <h1 class="text-2xl font-black mb-2 text-center text-slate-900">অ্যাডমিন কন্ট্রোল</h1>
+                <p class="text-xs text-slate-500 text-center mb-6">নিরাপদ প্রবেশাধিকারের জন্য লগইন করুন</p>
+                {% if error %}
+                    <p class="text-red-500 mb-4 text-xs text-center font-bold bg-red-50 p-2.5 rounded-xl border border-red-200">{{ error }}</p>
+                {% endif %}
+                <form method="POST" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">ইউজারনেম:</label>
+                        <input type="text" name="username" required class="w-full border border-slate-300 p-3 rounded-xl text-sm focus:outline-none focus:border-slate-900">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">পাসওয়ার্ড:</label>
+                        <input type="password" name="password" required class="w-full border border-slate-300 p-3 rounded-xl text-sm focus:outline-none focus:border-slate-900">
+                    </div>
+                    <button type="submit" class="w-full bg-slate-900 hover:bg-black text-white font-bold py-3 rounded-xl text-sm transition-all shadow-sm cursor-pointer">লগইন করুন</button>
+                </form>
+                <div class="mt-5 text-center">
+                    <a href="{{ url_for('index') }}" class="text-xs text-slate-500 hover:text-slate-900 font-medium">← হোম পেজে ফিরে যান</a>
+                </div>
+            </div>
+        {% else %}
+            <!-- Top Dashboard Bar -->
+            <div class="flex flex-wrap justify-between items-center bg-white p-5 rounded-2xl border border-slate-200 shadow-sm mb-6 gap-4">
+                <div>
+                    <h1 class="text-lg font-black text-slate-900">অ্যাডমিন কন্ট্রোল প্যানেল</h1>
+                    <p class="text-xs text-slate-500">রিপোর্ট মডারেশন, নোটিশ ও অ্যাডমিন সেটিংস</p>
+                </div>
+                <div class="flex items-center gap-2.5">
+                    <a href="{{ url_for('index') }}" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-xs font-bold transition-all">হোম পেজ</a>
+                    <a href="{{ url_for('logout') }}" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-sm">লগআউট</a>
+                </div>
+            </div>
 
-    {% if show_login %}
-    <div class="login-box">
-        <h2>অ্যাডমিন লগইন</h2>
-        {% if error %}
-        <div class="error-msg">{{ error }}</div>
-        {% endif %}
-        <form method="POST">
-            <input type="text" name="username" placeholder="ইউজারনেম" required>
-            <input type="password" name="password" placeholder="পাসওয়ার্ড" required>
-            <button type="submit" class="btn" style="width: 100%;">লগইন করুন</button>
-        </form>
-        <p style="margin-top: 15px;"><a href="{{ url_for('index') }}" style="color: #666; text-decoration: none;">← মূল ওয়েবসাইটে ফিরে যান</a></p>
-    </div>
-    {% else %}
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="bg-emerald-50 border border-emerald-300 text-emerald-700 px-4 py-3 rounded-xl mb-6 text-sm font-bold shadow-sm">
+                        {{ messages[0] }}
+                    </div>
+                {% endif %}
+            {% endwith %}
 
-    <div class="header">
-        <h2>🏛️ জনতার খাতা - অ্যাডমিন ড্যাশবোর্ড</h2>
-        <div>
-            <a href="{{ url_for('index') }}" target="_blank" style="margin-right: 15px; text-decoration: none; color: #333; font-weight: 600;">🌐 মূল ওয়েবসাইট দেখুন</a>
-            <a href="{{ url_for('logout') }}" class="logout-btn">লগআউট (Logout)</a>
-        </div>
-    </div>
-
-    <div class="main-container">
-        <!-- Sidebar Navigation Box -->
-        <div class="sidebar">
-            <h3>ম্যানেজমেন্ট মেনু</h3>
-            <ul>
-                <li><a href="#notice-section" class="active">📢 রানিং নোটিশ ম্যানেজমেন্ট</a></li>
-                <li><a href="#pending-section">⏳ অনুমোদন প্রত্যাশী রিপোর্ট</a></li>
-                <li><a href="#live-section">✅ প্রকাশিত লাইভ রিপোর্ট</a></li>
-            </ul>
-        </div>
-
-        <!-- Main Content Area -->
-        <div class="content-area">
-            
-            <!-- Notice Management -->
-            <div id="notice-section" class="card">
-                <h3>রানিং নোটিশ (News Ticker) ম্যানেজমেন্ট</h3>
-                <form action="{{ url_for('update_notice') }}" method="POST">
-                    <input type="text" name="notice_text" value="{{ notice.content if notice else '' }}" required>
-                    <button type="submit" class="btn">নোটিশ আপডেট করুন</button>
+            <!-- Notice Update Section -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm mb-6">
+                <h2 class="font-black text-sm mb-2 text-slate-900">🚨 জরুরি স্লাইডিং নোটিশ আপডেট করুন</h2>
+                <form action="{{ url_for('update_notice') }}" method="POST" class="space-y-3">
+                    <textarea name="notice_text" rows="2" class="w-full border border-slate-300 p-3 rounded-xl text-sm focus:outline-none focus:border-slate-900" required>{% if notice %}{{ notice.content }}{% endif %}</textarea>
+                    <div class="flex justify-end">
+                        <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm cursor-pointer">নোটিশ সেভ করুন</button>
+                    </div>
                 </form>
             </div>
 
-            <!-- Pending Reports -->
-            <div id="pending-section" class="card" style="border-left: 4px solid #f0ad4e;">
-                <h3>অনুমোদন প্রত্যাশী রিপোর্টসমূহ (Pending Reports)</h3>
+            <!-- Admin Credentials Update Section -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm mb-8">
+                <h2 class="font-black text-sm mb-2 text-slate-900">🔑 অ্যাডমিন ইউজারনেম ও পাসওয়ার্ড পরিবর্তন করুন</h2>
+                <form action="{{ url_for('update_credentials') }}" method="POST" class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">নতুন ইউজারনেম:</label>
+                        <input type="text" name="new_username" value="{{ admin_setting.username }}" required class="w-full border border-slate-300 p-2.5 rounded-xl text-sm focus:outline-none focus:border-slate-900">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">নতুন পাসওয়ার্ড:</label>
+                        <input type="text" name="new_password" value="{{ admin_setting.password }}" required class="w-full border border-slate-300 p-2.5 rounded-xl text-sm focus:outline-none focus:border-slate-900">
+                    </div>
+                    <div class="sm:col-span-2 flex justify-end">
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm cursor-pointer">ক্রেডেনশিয়াল আপডেট করুন</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Tab Switcher Buttons -->
+            <div class="flex gap-3 mb-6 border-b border-slate-200 pb-4">
+                <button onclick="switchTab('pending')" id="tabBtnPending" class="px-5 py-2.5 rounded-xl text-xs font-bold transition-all bg-slate-900 text-white shadow-sm cursor-pointer">
+                    পেন্ডিং পোস্টসমূহ (অনুমোদনের অপেক্ষায়)
+                </button>
+                <button onclick="switchTab('approved')" id="tabBtnApproved" class="px-5 py-2.5 rounded-xl text-xs font-bold transition-all bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 cursor-pointer">
+                    অনুমোদিত পোস্টসমূহ
+                </button>
+            </div>
+
+            <!-- Tab 1: Pending Posts Section -->
+            <div id="sectionPending" class="space-y-4">
                 {% if pending_posts %}
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>উপজেলা</th>
-                            <th>খাত</th>
-                            <th>বিবরণ</th>
-                            <th>কার্যক্রম</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for post in pending_posts %}
-                        <tr>
-                            <td>{{ post.thana }}</td>
-                            <td>{{ post.category }}</td>
-                            <td>{{ post.content }}</td>
-                            <td>
-                                <a href="{{ url_for('admin_action', post_id=post.id, action='approve') }}" class="action-btn btn-approve">অনুমোদন দিন</a>
-                                <a href="{{ url_for('admin_action', post_id=post.id, action='delete') }}" class="action-btn btn-delete" onclick="return confirm('নিশ্চিত ডিলিট করতে চান?')">ডিলিট</a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                    {% for p in pending_posts %}
+                        <div class="bg-white p-5 rounded-2xl border-l-4 border-amber-500 border-y border-r border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                            <div>
+                                <p class="text-xs text-slate-500 mb-1 font-semibold">থানা: <strong class="text-slate-800">{{ p.thana }}</strong> | দপ্তর: <strong class="text-slate-800">{{ p.category }}</strong></p>
+                                <p class="text-sm text-slate-900 leading-relaxed">{{ p.content }}</p>
+                            </div>
+                            <div class="flex items-center gap-2 shrink-0">
+                                <a href="{{ url_for('admin_action', post_id=p.id, action='approve') }}" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-sm">এপ্রুভ করুন</a>
+                                <a href="{{ url_for('admin_action', post_id=p.id, action='delete') }}" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-sm">ডিলিট</a>
+                            </div>
+                        </div>
+                    {% endfor %}
                 {% else %}
-                <p style="color: #666; text-align: center;">এই মুহূর্তে কোনো নতুন অপেক্ষমান রিপোর্ট নেই।</p>
+                    <div class="bg-white p-10 rounded-2xl border border-slate-200 text-center text-slate-400 text-xs font-medium">
+                        এই মুহূর্তে কোনো পেন্ডিং পোস্ট নেই।
+                    </div>
                 {% endif %}
             </div>
 
-            <!-- Approved Live Reports -->
-            <div id="live-section" class="card" style="border-left: 4px solid #5cb85c;">
-                <h3>প্রকাশিত লাইভ রিপোর্টসমূহ (Approved Live Reports)</h3>
+            <!-- Tab 2: Approved Posts Section -->
+            <div id="sectionApproved" class="space-y-4 hidden">
                 {% if approved_posts %}
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>আইডি</th>
-                            <th>উপজেলা</th>
-                            <th>খাত</th>
-                            <th>বিবরণ</th>
-                            <th>ভোট (সত্য/মিথ্যা)</th>
-                            <th>কার্যক্রম</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for post in approved_posts %}
-                        <tr>
-                            <td>{{ to_bn(post.id) }}</td>
-                            <td>{{ post.thana }}</td>
-                            <td>{{ post.category }}</td>
-                            <td>{{ post.content }}</td>
-                            <td>👍 {{ to_bn(post.true_votes) }} / 👎 {{ to_bn(post.false_votes) }}</td>
-                            <td>
-                                <a href="{{ url_for('admin_action', post_id=post.id, action='delete') }}" class="action-btn btn-delete" onclick="return confirm('এই লাইভ পোস্টটি ডিলিট করতে চান?')">ডিলিট করুন</a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                    {% for p in approved_posts %}
+                        <div class="bg-white p-5 rounded-2xl border-l-4 border-emerald-500 border-y border-r border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                            <div>
+                                <p class="text-xs text-slate-500 mb-1 font-semibold">থানা: <strong class="text-slate-800">{{ p.thana }}</strong> | দপ্তর: <strong class="text-slate-800">{{ p.category }}</strong></p>
+                                <p class="text-sm text-slate-900 leading-relaxed">{{ p.content }}</p>
+                            </div>
+                            <div class="shrink-0">
+                                <a href="{{ url_for('admin_action', post_id=p.id, action='delete') }}" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-sm">ডিলিট করুন</a>
+                            </div>
+                        </div>
+                    {% endfor %}
                 {% else %}
-                <p style="color: #666; text-align: center;">এই মুহূর্তে কোনো প্রকাশিত লাইভ রিপোর্ট নেই। কেউ অভিযোগ জমা দিলে এবং আপনি তা এপ্রুভ করলে এখানে দেখতে পাবেন।</p>
+                    <div class="bg-white p-10 rounded-2xl border border-slate-200 text-center text-slate-400 text-xs font-medium">
+                        কোনো অনুমোদিত পোস্ট নেই।
+                    </div>
                 {% endif %}
             </div>
 
-        </div>
+            <script>
+                function switchTab(tab) {
+                    const btnPending = document.getElementById('tabBtnPending');
+                    const btnApproved = document.getElementById('tabBtnApproved');
+                    const secPending = document.getElementById('sectionPending');
+                    const secApproved = document.getElementById('sectionApproved');
+
+                    if(tab === 'pending') {
+                        btnPending.className = "px-5 py-2.5 rounded-xl text-xs font-bold transition-all bg-slate-900 text-white shadow-sm cursor-pointer";
+                        btnApproved.className = "px-5 py-2.5 rounded-xl text-xs font-bold transition-all bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 cursor-pointer";
+                        secPending.classList.remove('hidden');
+                        secApproved.classList.add('hidden');
+                    } else {
+                        btnApproved.className = "px-5 py-2.5 rounded-xl text-xs font-bold transition-all bg-slate-900 text-white shadow-sm cursor-pointer";
+                        btnPending.className = "px-5 py-2.5 rounded-xl text-xs font-bold transition-all bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 cursor-pointer";
+                        secApproved.classList.remove('hidden');
+                        secPending.classList.add('hidden');
+                    }
+                }
+            </script>
+        {% endif %}
     </div>
-    {% endif %}
 
 </body>
 </html>
