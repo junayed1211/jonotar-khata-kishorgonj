@@ -8,16 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Hind Siliguri', sans-serif; }
-        @keyframes marquee {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-        }
-        .animate-marquee {
-            display: inline-block;
-            white-space: nowrap;
-            animation: marquee 28s linear infinite;
-        }
-        .animate-marquee:hover { animation-play-state: paused; }
     </style>
 </head>
 <body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col">
@@ -57,13 +47,13 @@
 
         {% if notice %}
         <div class="bg-red-700 text-white flex items-center overflow-hidden h-10 border-t border-red-800">
-            <div class="bg-amber-400 text-slate-900 font-black text-xs sm:text-sm px-4 sm:px-5 h-full flex items-center whitespace-nowrap z-10 shadow-md">
+            <div class="bg-amber-400 text-slate-900 font-black text-xs sm:text-sm px-4 sm:px-5 h-full flex items-center whitespace-nowrap z-10 shadow-md shrink-0">
                 🚨 জরুরি নোটিশ
             </div>
-            <div class="overflow-hidden whitespace-nowrap w-full relative flex items-center">
-                <div class="animate-marquee text-xs sm:text-sm font-semibold px-4 tracking-wide">
+            <div class="overflow-hidden w-full flex items-center px-2">
+                <marquee scrollamount="5" scrolldelay="60" class="text-xs sm:text-sm font-bold tracking-wide text-white" onmouseover="this.stop();" onmouseout="this.start();">
                     {{ notice.content }}
-                </div>
+                </marquee>
             </div>
         </div>
         {% endif %}
@@ -242,7 +232,7 @@
                     </div>
                 {% else %}
                     <div class="bg-white border border-slate-200 p-12 rounded-2xl text-center">
-                        <p class="text-slate-400 text-sm font-medium">এই মুহূর্তে এই থানায় কোনো রিপোর্ট বা অভিযোগ পাওয়া যায়নি।</p>
+                        <p class="text-slate-400 text-sm font-medium">এই মুহূর্তে এই থানায় কোনো রিপোর্ট বা অভিযোগ পাওয়া যায়নি।</p>
                     </div>
                 {% endif %}
             </div>
@@ -259,8 +249,8 @@
                 <button onclick="closeModal('privacyModal')" class="text-slate-400 hover:text-slate-900 font-bold text-lg cursor-pointer">✕</button>
             </div>
             <div class="space-y-3 text-xs sm:text-sm text-slate-700 leading-relaxed">
-                <p><strong>অভিযোগ সংগ্রহ করি, ব্যক্তি নয়:</strong> জনতার খাতা আপনার জমা দেওয়া রিপোর্টের ঘরগুলো সংরক্ষণ করে। আপনি স্বেচ্ছায় যোগাযোগের তথ্য দিলে তা মডারেশনের জন্য আলাদা ব্যক্তিগত টেবিলে সংরক্ষিত হয় এবং পাবলিক রিপোর্টে কখনো থাকে না。</p>
-            
+                <p><strong>অভিযোগ সংগ্রহ করি, ব্যক্তি নয়:</strong> জনতার খাতা আপনার জমা দেওয়া রিপোর্টের ঘরগুলো সংরক্ষণ করে। আপনি স্বেচ্ছায় যোগাযোগের তথ্য দিলে তা মডারেশনের জন্য আলাদা ব্যক্তিগত টেবিলে সংরক্ষিত হয় এবং পাবলিক রিপোর্টে কখনো থাকে না।</p>
+                
                 <p><strong>যা সংরক্ষণ করে না:</strong> কোনো অ্যাকাউন্ট, সঠিক বাসার ঠিকানা, কাঁচা আইপি-অ্যাড্রেস কলাম, অ্যানালিটিক্স কুকি, বিজ্ঞাপন আইডেন্টিফায়ার বা ডিভাইস ফিঙ্গারপ্রিন্ট সংরক্ষণ করে না।</p>
             </div>
             <div class="pt-3 text-right">
@@ -276,8 +266,8 @@
                 <button onclick="closeModal('aboutModal')" class="text-slate-400 hover:text-slate-900 font-bold text-lg cursor-pointer">✕</button>
             </div>
             <div class="space-y-3 text-xs sm:text-sm text-slate-700 leading-relaxed">
-                <p><strong>আমরা কী করি:</strong> কিশোরগঞ্জ জেলার বিভিন্ন দপ্তর, শিক্ষা, স্বাস্থ্য ও প্রশাসনিক খাতের অনিয়ম, দুর্নীতি ও ঘুষের বিরুদ্ধে সাধারণ মানুষের কণ্ঠস্বর হিসেবে কাজ করি এবং স্বচ্ছতা নিশ্চিত করতে ডিজিটাল খাতা পরিচালনা করি।</p>
-                <p><strong>আমরা কী করি না:</strong> আমরা কোনো ব্যক্তিবিশেষের বিরুদ্ধে ব্যক্তিগত আক্রোশমূলক বা মিথ্যা তথ্য প্রচার করি না। প্রতিটি জমা হওয়া রিপোর্ট পুঙ্খানুপুঙ্খ যাচাই ও মডারেশনের পরেই কেবল প্রকাশিত হয়।</p>
+                <p><strong>আমরা কী করি:</strong> কিশোরগঞ্জ জেলার বিভিন্ন দপ্তর, শিক্ষা, স্বাস্থ্য ও প্রশাসনিক খাতের অনিয়ম, দুর্নীতি ও ঘুষের বিরুদ্ধে সাধারণ মানুষের কণ্ঠস্বর হিসেবে কাজ করি এবং স্বচ্ছতা নিশ্চিত করতে ডিজিটাল খাতা পরিচালনা করি।</p>
+                <p><strong>আমরা কী করি না:</strong> আমরা কোনো ব্যক্তিবিশেষের বিরুদ্ধে ব্যক্তিগত আক্রোশমূলক বা মিথ্যা তথ্য প্রচার করি না। প্রতিটি জমা হওয়া রিপোর্ট পুঙ্খানুপুঙ্খ যাচাই ও মডারেশনের পরেই কেবল প্রকাশিত হয়।</p>
             </div>
             <div class="pt-3 text-right">
                 <button onclick="closeModal('aboutModal')" class="bg-slate-900 text-white px-5 py-2 rounded-xl text-xs font-bold cursor-pointer">বন্ধ করুন</button>
