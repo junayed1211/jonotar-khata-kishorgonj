@@ -4,320 +4,327 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>জনতার খাতা - কিশোরগঞ্জ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        html { scroll-behavior: smooth; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f4f0; margin: 0; padding: 0; color: #111; }
-        
-        header { display: flex; justify-content: space-between; align-items: center; padding: 18px 5%; border-bottom: 1px solid #ccc; background: #fff; position: sticky; top: 0; z-index: 100; flex-wrap: wrap; gap: 15px; }
-        .logo { font-size: 22px; font-weight: 800; text-decoration: none; color: #000; }
-        .logo span { background: #ffd700; padding: 2px 8px; border-radius: 2px; }
-        
-        nav { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
-        nav a { text-decoration: none; color: #222; font-weight: 600; font-size: 15px; cursor: pointer; }
-        nav a:hover { color: #d9534f; }
-        
-        .btn-black { background: #000; color: #fff !important; padding: 10px 20px; text-decoration: none; font-weight: bold; border-radius: 4px; transition: 0.3s; display: inline-block; }
-        .btn-black:hover { background: #333; }
-
-        .notice-ticker { background: #b30000; color: #fff; padding: 10px 5%; font-weight: bold; font-size: 14px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #800000; }
-        .notice-badge { background: #ffd700; color: #000; padding: 3px 8px; border-radius: 3px; font-size: 12px; white-space: nowrap; }
-        
-        .hero { padding: 40px 5% 20px 5%; max-width: 1200px; margin: 0 auto; }
-        .hero h1 { font-size: 36px; line-height: 1.3; font-weight: 800; max-width: 900px; margin-top: 5px; }
-        .highlight { background: #ffd700; padding: 0 6px; }
-
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid #ccc; background: #fff; margin: 0 5% 40px 5%; max-width: 1200px; }
-        .stat-box { padding: 20px; border-right: 1px solid #ccc; }
-        .stat-box:last-child { border-right: none; }
-        .stat-box .title { font-size: 13px; color: #666; font-weight: bold; text-transform: uppercase; }
-        .stat-box .value { font-size: 24px; font-weight: 800; margin-top: 5px; }
-        .stat-yellow { background: #ffd700; }
-
-        .main-container { display: flex; gap: 40px; padding: 0 5% 50px 5%; max-width: 1200px; margin: 0 auto; }
-        .content-area { flex: 2; width: 100%; }
-        
-        .sidebar { flex: 1; background: #fff; border: 1px solid #ccc; padding: 20px; height: fit-content; border-radius: 2px; }
-        .sidebar h3 { border-bottom: 2px solid #000; padding-bottom: 8px; margin-top: 0; font-size: 18px; }
-        .thana-item { display: flex; justify-content: space-between; padding: 12px 10px; border-bottom: 1px solid #eee; text-decoration: none; color: #333; font-size: 15px; }
-        .thana-item:hover { background: #fff8d6; color: #000; font-weight: bold; }
-
-        .monthly-section { background: #fff; border: 1px solid #ccc; padding: 30px; border-radius: 2px; margin-bottom: 40px; }
-        .monthly-header h2 { font-size: 30px; margin: 0 0 5px 0; font-weight: 800; }
-        .monthly-header h2 span { background: #ffd700; padding: 0 6px; }
-        .monthly-header p { color: #555; font-size: 14px; margin-bottom: 25px; }
-
-        .monthly-grid { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid #000; background: #fff; margin-bottom: 30px; }
-        .m-box { padding: 20px; border-right: 1px solid #000; }
-        .m-box:last-child { border-right: none; }
-        .m-box .m-title { font-size: 12px; color: #444; font-weight: bold; text-transform: uppercase; }
-        .m-box .m-val { font-size: 22px; font-weight: 800; margin-top: 8px; }
-        .m-highlight { background: #ffd700; }
-
-        .analytics-subgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .sub-card { background: #fafafa; border: 1px solid #ccc; padding: 20px; }
-        .sub-card h4 { margin-top: 0; font-size: 16px; border-bottom: 1px solid #ddd; padding-bottom: 8px; }
-
-        .bar-container { margin-bottom: 15px; }
-        .bar-label { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 5px; }
-        .progress-bg { background: #ddd; height: 10px; border-radius: 5px; overflow: hidden; }
-        .progress-fill { background: #000; height: 100%; border-radius: 5px; }
-
-        .report-card { background: #fff; border: 1px solid #000; margin-bottom: 35px; box-shadow: 3px 3px 0px #000; }
-
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
-        .modal-content { background: #fff; width: 90%; max-width: 600px; padding: 30px; border-radius: 4px; position: relative; max-height: 80vh; overflow-y: auto; }
-        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; font-weight: bold; }
-        .privacy-box { background: #f9f9f9; padding: 15px; border-left: 4px solid #ffd700; margin-bottom: 15px; }
-
-        @media (max-width: 768px) {
-            header { flex-direction: column; align-items: flex-start; padding: 15px; }
-            nav { width: 100%; justify-content: space-between; gap: 10px; font-size: 13px; }
-            .btn-black { padding: 8px 12px; font-size: 13px; text-align: center; width: 100%; box-sizing: border-box; }
-            
-            .hero h1 { font-size: 24px; }
-            
-            .stats-grid { grid-template-columns: repeat(2, 1fr); margin: 0 5% 20px 5%; }
-            .stat-box { border-bottom: 1px solid #ccc; }
-            .stat-box:nth-child(2) { border-right: none; }
-            
-            .main-container { flex-direction: column; gap: 25px; }
-            
-            .monthly-grid { grid-template-columns: repeat(2, 1fr); }
-            .m-box { border-bottom: 1px solid #000; }
-            .m-box:nth-child(2) { border-right: none; }
-            
-            .analytics-subgrid { grid-template-columns: 1fr; }
-            
-            .report-card div[style*="justify-content: space-between"] {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
+        body { font-family: 'Hind Siliguri', sans-serif; }
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
         }
+        .animate-marquee {
+            display: inline-block;
+            white-space: nowrap;
+            animation: marquee 28s linear infinite;
+        }
+        .animate-marquee:hover { animation-play-state: paused; }
     </style>
 </head>
-<body>
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col">
 
-    <header>
-        <a href="/" class="logo">জনতার খাতা <span>কিশোরগঞ্জ</span></a>
-        <nav>
-            <a href="#recent-reports">রিপোর্ট</a>
-            <a href="#monthly-analytics">মাসিক রিপোর্ট</a>
-            <a onclick="openPrivacyModal()">গোপনীয়তা</a>
-            <a href="/submit" class="btn-black">ঘুষ বা হয়রানির রিপোর্ট করুন →</a>
-        </nav>
-    </header>
+    <!-- Sticky Header & Notice Wrapper -->
+    <div class="sticky top-0 z-50 shadow-md">
+        <header class="bg-white border-b border-slate-200">
+            <div class="w-full px-4 sm:px-10 h-16 flex items-center justify-between gap-4">
+                <!-- Logo -->
+                <a href="{{ url_for('index') }}" class="flex items-center gap-2 text-lg sm:text-2xl font-black text-slate-900 tracking-tight shrink-0">
+                    <span>জনতার খাতা</span>
+                    <span class="bg-amber-400 text-slate-900 px-2.5 py-0.5 rounded-lg text-sm sm:text-base font-bold shadow-sm">কিশোরগঞ্জ</span>
+                </a>
 
-    <div class="notice-ticker">
-        <span class="notice-badge">জরুরি নোটিশ</span>
-        <marquee behavior="scroll" direction="left" onmouseover="this.stop();" onmouseout="this.start();">
-            📢 {{ notice.content if notice else 'জনতার খাতা - কিশোরগঞ্জ প্ল্যাটফর্মে আপনাকে স্বাগতম। দুর্নীতি ও অনিয়মের বিরুদ্ধে সরব হোন।' }}
-        </marquee>
+                <!-- Policy & Info Navigation -->
+                <div class="hidden xl:flex items-center gap-6 text-xs font-bold text-slate-700">
+                    <button onclick="openModal('privacyModal')" class="hover:text-red-600 transition-colors flex items-center gap-1.5 cursor-pointer">
+                         গোপনীয়তা ও নিরাপত্তা
+                    </button>
+                    <span class="text-slate-300">|</span>
+                    <button onclick="openModal('aboutModal')" class="hover:text-red-600 transition-colors flex items-center gap-1.5 cursor-pointer">
+                         আমরা কী করি, কী করি না
+                    </button>
+                </div>
+
+                <!-- Right Action Buttons -->
+                <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+                    <a href="{{ url_for('submit') }}" class="bg-red-600 hover:bg-red-700 text-white text-xs sm:text-sm font-bold px-3 sm:px-4 py-2 rounded-xl shadow transition-all flex items-center gap-1">
+                        <span>রিপোর্ট করুন</span> <span class="hidden sm:inline">→</span>
+                    </a>
+                    <a href="{{ url_for('admin') }}" class="bg-slate-900 hover:bg-black text-white text-xs sm:text-sm font-bold px-3 py-2 rounded-xl shadow transition-all flex items-center gap-1">
+                        <span> Admin</span>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        {% if notice %}
+        <div class="bg-red-700 text-white flex items-center overflow-hidden h-10 border-t border-red-800">
+            <div class="bg-amber-400 text-slate-900 font-black text-xs sm:text-sm px-4 sm:px-5 h-full flex items-center whitespace-nowrap z-10 shadow-md">
+                🚨 জরুরি নোটিশ
+            </div>
+            <div class="overflow-hidden whitespace-nowrap w-full relative flex items-center">
+                <div class="animate-marquee text-xs sm:text-sm font-semibold px-4 tracking-wide">
+                    {{ notice.content }}
+                </div>
+            </div>
+        </div>
+        {% endif %}
     </div>
 
-    <div class="hero">
-        <h1>চুপ থাকা মানে <span class="highlight">অনিয়মকে প্রশ্রয় দেওয়া।</span> কিশোরগঞ্জের অনিয়মগুলো এবার <span class="highlight">খাতায় উঠুক।</span></h1>
-    </div>
+    <!-- Main Content Container -->
+    <main class="w-full px-3 sm:px-6 lg:px-12 py-6 flex-1">
 
-    <!-- সর্বমোট পরিসংখ্যানের বক্স -->
-    <div class="stats-grid">
-        <div class="stat-box stat-yellow">
-            <div class="title">সর্বমোট অনুমোদিত রিপোর্ট</div>
-            <div class="value">{{ total_count }}টি</div>
+        <!-- Hero Slogan Banner -->
+        <div class="text-center py-6 sm:py-8 mb-8 border-b border-slate-200">
+            <h1 class="text-xl sm:text-3xl lg:text-4xl font-black text-slate-900 leading-tight mb-2">
+                চুপ থাকা মানে <span class="bg-amber-300 px-2 py-1 rounded-xl shadow-sm">অনিয়মকে প্রশ্রয় দেওয়া।</span>
+            </h1>
+            <p class="text-lg sm:text-2xl lg:text-3xl font-black text-slate-900">
+                কিশোরগঞ্জের অনিয়মগুলো এবার <span class="bg-amber-300 px-2 py-1 rounded-xl shadow-sm">খাতায় উঠুক।</span>
+            </p>
         </div>
-        <div class="stat-box">
-            <div class="title">সক্রিয় থানা লেজার</div>
-            <div class="value">১৩টি উপজেলা</div>
-        </div>
-        <div class="stat-box">
-            <div class="title">সর্বমোট প্রধান অনিয়মের খাত</div>
-            <div class="value">{{ top_sector_all }}</div>
-        </div>
-        <div class="stat-box">
-            <div class="title">জনতার সততা রেটিং (সর্বমোট)</div>
-            <div class="value">{{ rating_all }}</div>
-        </div>
-    </div>
 
-    <div class="main-container">
-        
-        <div class="content-area">
+        <!-- Analytics Cards -->
+        <div id="analytics" class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+            <!-- Today Report -->
+            <div class="bg-gradient-to-br from-white to-red-50/50 p-5 rounded-3xl border-2 border-red-100 shadow-md">
+                <div class="flex justify-between items-center pb-3 mb-3 border-b border-red-100">
+                    <h3 class="font-black text-slate-900 text-base sm:text-lg"> আজকের রিপোর্ট</h3>
+                    <span class="text-xs bg-red-600 text-white font-bold px-3 py-1 rounded-full shadow-sm">{{ today_metrics.rating }}</span>
+                </div>
+                <div class="space-y-3 text-sm">
+                    <div class="flex justify-between items-center bg-white px-3.5 py-2 rounded-xl border border-red-100 shadow-sm">
+                        <span class="text-slate-600 font-semibold text-xs sm:text-sm">সর্বমোট অভিযোগ</span>
+                        <span class="font-black text-red-600 text-sm sm:text-base bg-red-50 px-2 py-0.5 rounded-lg">{{ today_metrics.count }}টি</span>
+                    </div>
+                    <div class="flex justify-between items-center bg-white px-3.5 py-2 rounded-xl border border-red-100 shadow-sm">
+                        <span class="text-slate-600 font-semibold text-xs sm:text-sm">শীর্ষ দপ্তর</span>
+                        <span class="font-bold text-red-900 bg-red-100/80 px-2.5 py-1 rounded-lg text-xs">{{ today_metrics.top_dept }}</span>
+                    </div>
+                    <div class="flex justify-between items-center bg-white px-3.5 py-2 rounded-xl border border-red-100 shadow-sm">
+                        <span class="text-slate-600 font-semibold text-xs sm:text-sm">শীর্ষ উপজেলা</span>
+                        <span class="font-bold text-red-900 bg-red-100/80 px-2.5 py-1 rounded-lg text-xs">{{ today_metrics.top_thana }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Last Month Report -->
+            <div class="bg-gradient-to-br from-white to-blue-50/50 p-5 rounded-3xl border-2 border-blue-100 shadow-md">
+                <div class="flex justify-between items-center pb-3 mb-3 border-b border-blue-100">
+                    <h3 class="font-black text-slate-900 text-base sm:text-lg"> গত ৩০ দিনের রিপোর্ট</h3>
+                    <span class="text-xs bg-blue-600 text-white font-bold px-3 py-1 rounded-full shadow-sm">{{ monthly_metrics.rating }}</span>
+                </div>
+                <div class="space-y-3 text-sm">
+                    <div class="flex justify-between items-center bg-white px-3.5 py-2 rounded-xl border border-blue-100 shadow-sm">
+                        <span class="text-slate-600 font-semibold text-xs sm:text-sm">সর্বমোট অভিযোগ</span>
+                        <span class="font-black text-blue-600 text-sm sm:text-base bg-blue-50 px-2 py-0.5 rounded-lg">{{ monthly_metrics.count }}টি</span>
+                    </div>
+                    <div class="flex justify-between items-center bg-white px-3.5 py-2 rounded-xl border border-blue-100 shadow-sm">
+                        <span class="text-slate-600 font-semibold text-xs sm:text-sm">শীর্ষ দপ্তর</span>
+                        <span class="font-bold text-blue-900 bg-blue-100/80 px-2.5 py-1 rounded-lg text-xs">{{ monthly_metrics.top_dept }}</span>
+                    </div>
+                    <div class="flex justify-between items-center bg-white px-3.5 py-2 rounded-xl border border-blue-100 shadow-sm">
+                        <span class="text-slate-600 font-semibold text-xs sm:text-sm">শীর্ষ উপজেলা</span>
+                        <span class="font-bold text-blue-900 bg-blue-100/80 px-2.5 py-1 rounded-lg text-xs">{{ monthly_metrics.top_thana }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- All Reports -->
+            <div class="bg-gradient-to-br from-white to-amber-50/50 p-5 rounded-3xl border-2 border-amber-100 shadow-md">
+                <div class="flex justify-between items-center pb-3 mb-3 border-b border-amber-100">
+                    <h3 class="font-black text-slate-900 text-base sm:text-lg"> সর্বমোট রিপোর্ট</h3>
+                    <span class="text-xs bg-amber-600 text-white font-bold px-3 py-1 rounded-full shadow-sm">{{ all_metrics.rating }}</span>
+                </div>
+                <div class="space-y-3 text-sm">
+                    <div class="flex justify-between items-center bg-white px-3.5 py-2 rounded-xl border border-amber-100 shadow-sm">
+                        <span class="text-slate-600 font-semibold text-xs sm:text-sm">সর্বমোট অভিযোগ</span>
+                        <span class="font-black text-amber-600 text-sm sm:text-base bg-amber-50 px-2 py-0.5 rounded-lg">{{ all_metrics.count }}টি</span>
+                    </div>
+                    <div class="flex justify-between items-center bg-white px-3.5 py-2 rounded-xl border border-amber-100 shadow-sm">
+                        <span class="text-slate-600 font-semibold text-xs sm:text-sm">শীর্ষ দপ্তর</span>
+                        <span class="font-bold text-amber-900 bg-amber-100/80 px-2.5 py-1 rounded-lg text-xs">{{ all_metrics.top_dept }}</span>
+                    </div>
+                    <div class="flex justify-between items-center bg-white px-3.5 py-2 rounded-xl border border-amber-100 shadow-sm">
+                        <span class="text-slate-600 font-semibold text-xs sm:text-sm">শীর্ষ উপজেলা</span>
+                        <span class="font-bold text-amber-900 bg-amber-100/80 px-2.5 py-1 rounded-lg text-xs">{{ all_metrics.top_thana }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Layout Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
             
-            <!-- ৩০ দিনের হিসাব -->
-            <div id="monthly-analytics" class="monthly-section">
-                <div class="monthly-header">
-                    <h2>ত্রিশ দিনের <span>রিপোর্ট করা দাবি।</span></h2>
-                    <p>গত ৩০ দিনের প্রকাশিত বেনামী অভিযোগগুলোর পরিমাণ, ফলাফল এবং কোথায় রিপোর্ট বেশি জমা হয়েছে তা দেখতে একত্র করা হয়েছে।</p>
-                </div>
-
-                <div class="monthly-grid">
-                    <div class="m-box">
-                        <div class="m-title">প্রকাশিত রিপোর্ট (৩০ দিন)</div>
-                        <div class="m-val">{{ monthly_count }}টি</div>
+            <!-- Left Sidebars -->
+            <aside class="lg:col-span-1 space-y-6">
+                <!-- কিশোরগঞ্জ থানা লেজার -->
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="bg-slate-900 text-white px-4 py-3 font-bold text-sm flex items-center justify-between">
+                        <span>কিশোরগঞ্জ থানা লেজার</span>
+                        <span class="text-xs bg-red-600 px-2 py-0.5 rounded-full font-bold">রিপোর্ট</span>
                     </div>
-                    <div class="m-box">
-                        <div class="m-title">শীর্ষ অভিযোগের এলাকা (৩০ দিন)</div>
-                        <div class="m-val" style="font-size: 18px;">{{ selected_thana if selected_thana else "কিশোরগঞ্জ সদর" }}</div>
-                    </div>
-                    <div class="m-box m-highlight">
-                        <div class="m-title">শীর্ষ অনিয়মের দপ্তর (৩০ দিন)</div>
-                        <div class="m-val" style="font-size: 18px;">{{ top_sector_monthly }}</div>
-                    </div>
-                    <div class="m-box">
-                        <div class="m-title">জনতার সততা রেটিং (৩০ দিন)</div>
-                        <div class="m-val">{{ rating_monthly }}</div>
+                    
+                    <div class="divide-y divide-slate-100 text-sm max-h-[350px] overflow-y-auto">
+                        <a href="{{ url_for('index', thana='all') }}" class="flex items-center justify-between px-4 py-2.5 transition-colors {% if not selected_thana or selected_thana == 'all' %}bg-amber-400 font-extrabold text-slate-900{% else %}hover:bg-slate-50 text-slate-700 font-medium{% endif %}">
+                            <span class="text-xs"> সকল থানা / উপজেলা</span>
+                            <span class="text-[11px] px-2 py-0.5 rounded bg-white/60 font-bold">({{ total_approved_count }})</span>
+                        </a>
+                        {% for t in thanas %}
+                            <a href="{{ url_for('index', thana=t) }}" class="flex items-center justify-between px-4 py-2 transition-colors {% if selected_thana == t %}bg-red-600 text-white font-extrabold{% else %}hover:bg-slate-50 text-slate-700{% endif %}">
+                                <span class="text-xs"> {{ t }}</span>
+                                <span class="text-[11px] px-2 py-0.5 rounded {% if selected_thana == t %}bg-white/20 text-white{% else %}bg-slate-100 text-slate-600{% endif %} font-bold">({{ thana_counts[t] }})</span>
+                            </a>
+                        {% endfor %}
                     </div>
                 </div>
 
-                <div class="analytics-subgrid">
-                    <div class="sub-card">
-                        <h4>📊 দপ্তরের অনুপাত ও বিন্যাস (৩০ দিন)</h4>
-                        <p style="font-size: 12px; color: #666; margin-bottom: 15px;">গত ১ মাসে কোন দপ্তরে কী পরিমাণ অভিযোগ এসেছে:</p>
-                        
-                        {% if dept_analytics %}
-                            {% for dept in dept_analytics %}
-                                <div class="bar-container">
-                                    <div class="bar-label">
-                                        <span>🏢 {{ dept.name }}</span>
-                                        <span>{{ dept.count }}টি ({{ dept.percentage }}%)</span>
+                <!-- দপ্তর লেজার -->
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="bg-amber-400 text-slate-900 px-4 py-3 font-extrabold text-sm flex items-center justify-between shadow-sm">
+                        <span>দপ্তর লেজার</span>
+                        <span class="text-xs bg-slate-900 text-white px-2 py-0.5 rounded font-bold">রিপোর্ট</span>
+                    </div>
+                    <div class="divide-y divide-slate-100 text-sm max-h-[350px] overflow-y-auto">
+                        {% for dept in dept_list %}
+                            <div class="flex items-center justify-between px-4 py-2.5 text-slate-700 font-medium text-xs">
+                                <span> {{ dept }}</span>
+                                <span class="font-bold text-slate-900">({{ dept_counts.get(dept, '০') }})</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Right Content: Approved Posts Feed -->
+            <div class="lg:col-span-3 space-y-5">
+                <div class="flex justify-between items-center bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                    <h2 class="text-sm sm:text-base font-bold text-slate-900">অনুমোদিত রিপোর্ট ও অভিযোগসমূহ</h2>
+                    <span class="text-xs text-slate-500 font-medium">ফিল্টারকৃত মোট: {{ posts|length }}টি</span>
+                </div>
+
+                {% if posts %}
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        {% for p in posts %}
+                            <div class="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm hover:border-slate-300 transition-all flex flex-col justify-between">
+                                <div>
+                                    <div class="flex flex-wrap justify-between items-center gap-1.5 text-[11px] text-slate-500 mb-3 pb-2.5 border-b border-slate-100">
+                                        <div class="flex items-center gap-1.5 flex-wrap">
+                                            <span class="bg-red-50 text-red-700 font-black px-2 py-0.5 rounded">#{{ p.index }}</span>
+                                            <span class="bg-slate-100 text-slate-700 font-bold px-2 py-0.5 rounded"> {{ p.thana }}</span>
+                                            <span class="bg-amber-50 text-amber-700 font-bold px-2 py-0.5 rounded"> {{ p.category }}</span>
+                                        </div>
+                                        <span> {{ p.created_at_bn }}</span>
                                     </div>
-                                    <div class="progress-bg">
-                                        <div class="progress-fill" style="width: {{ dept.raw_percentage }}%;"></div>
+
+                                    <p class="text-slate-800 text-sm leading-relaxed whitespace-pre-line mb-4">{{ p.content }}</p>
+                                </div>
+
+                                <!-- Instant React Box -->
+                                <div class="bg-amber-50 border border-amber-200 p-2 rounded-xl flex flex-col gap-1.5 shadow-xs">
+                                    <span class="text-[11px] font-bold text-slate-700 text-center">এই রিপোর্টটি কি সঠিক? আপনার মতামত দিন:</span>
+                                    <div class="flex items-center gap-2">
+                                        <button onclick="sendVote({{ p.raw_id }}, 'true')" id="btn-true-{{ p.raw_id }}" 
+                                            class="flex-1 font-bold px-2 py-1.5 text-[11px] text-center transition-all border rounded-lg shadow-2xs cursor-pointer flex items-center justify-center gap-1
+                                            {% if p.voted_type == 'true' %} bg-amber-500 text-slate-950 border-amber-600 font-black ring-2 ring-amber-300 {% elif p.voted_type == 'false' %} bg-amber-100 text-slate-400 border-amber-200 opacity-60 cursor-not-allowed {% else %} bg-amber-300/80 hover:bg-amber-400 text-slate-900 border-amber-400 {% endif %}"
+                                            {% if p.voted_type %}disabled{% endif %}>
+                                            ▲ হ্যাঁ (<span id="true-count-{{ p.raw_id }}">{{ p.true_votes }}</span>)
+                                        </button>
+
+                                        <button onclick="sendVote({{ p.raw_id }}, 'false')" id="btn-false-{{ p.raw_id }}" 
+                                            class="flex-1 font-bold px-2 py-1.5 text-[11px] text-center transition-all rounded-lg shadow-2xs cursor-pointer flex items-center justify-center gap-1
+                                            {% if p.voted_type == 'false' %} bg-slate-900 text-white font-black ring-2 ring-slate-700 {% elif p.voted_type == 'true' %} bg-slate-200 text-slate-400 opacity-60 cursor-not-allowed {% else %} bg-slate-800 hover:bg-slate-900 text-white {% endif %}"
+                                            {% if p.voted_type %}disabled{% endif %}>
+                                            ▼ না (<span id="false-count-{{ p.raw_id }}">{{ p.false_votes }}</span>)
+                                        </button>
                                     </div>
                                 </div>
-                            {% endfor %}
-                        {% else %}
-                            <p style="color: #777; font-size: 13px;">গত ১ মাসে কোনো ডাটা নেই।</p>
-                        {% endif %}
-                    </div>
-
-                    <div class="sub-card">
-                        <h4>ℹ️ ডেটা পর্যালোচনার নিয়ম</h4>
-                        <p style="font-size: 13px; line-height: 1.6; color: #444; margin-top: 10px;">
-                            কিশোরগঞ্জ জেলার ১৩টি উপজেলার বিভিন্ন দপ্তরের অনিয়ম ও হয়রানির তথ্য এখানে গত ত্রিশ দিনের রোলিং উইন্ডো হিসেবে স্বয়ংক্রিয়ভাবে আপডেট হয়। প্রতিটি ঘটনা সত্যতা যাচাইয়ের জন্য পাবলিক ভোটিং সিস্টেম রয়েছে।
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- সাম্প্রতিক লাইভ রিপোর্টসমূহ -->
-            <div id="recent-reports">
-                <h3 style="font-size: 20px; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 25px;">
-                    📝 সাম্প্রতিক লাইভ রিপোর্টসমূহ 
-                    {% if selected_thana %} - <span style="color: #d9534f;">{{ selected_thana }}</span> {% endif %}
-                </h3>
-
-                {% for post in posts %}
-                    <div class="report-card">
-                        
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #000; padding: 12px 18px; background: #fafafa;">
-                            <div>
-                                <span style="background: #ffd700; color: #000; font-weight: bold; padding: 4px 10px; border: 1px solid #000; margin-right: 8px;">#{{ post.index }}</span>
-                                <span style="background: #fff; border: 1px solid #000; padding: 4px 12px; font-weight: bold; font-size: 13px;">{{ post.category }}</span>
                             </div>
-                            <div style="font-size: 13px; color: #333; font-weight: 700;">
-                                📍 {{ post.thana }}
-                            </div>
-                        </div>
-
-                        <div style="padding: 22px;">
-                            <div style="margin-bottom: 12px;">
-                                <span style="background: #ffeeba; color: #856404; border: 1px solid #ffe8a1; padding: 3px 8px; font-size: 12px; font-weight: bold;">অযাচাইকৃত</span>
-                                <span style="background: #e2e3e5; color: #383d41; padding: 3px 8px; font-size: 12px; font-weight: bold; margin-left: 5px;">জনতার দাবি</span>
-                            </div>
-
-                            <h3 style="margin: 0 0 10px 0; font-size: 20px; font-weight: 800; color: #000;">
-                                {{ post.category }} সংক্রান্ত অভিযোগ
-                            </h3>
-
-                            <p style="margin: 0 0 15px 0; font-size: 13px; color: #555; font-weight: 600;">
-                                📍 {{ post.thana }}, কিশোরগঞ্জ জেলা • ID: #{{ post.id }}
-                            </p>
-
-                            <p style="margin: 0; font-size: 16px; line-height: 1.6; color: #111; font-style: italic; font-family: Georgia, serif; background: #fdfdfd; padding: 15px; border-left: 4px solid #000;">
-                                “{{ post.content }}”
-                            </p>
-                        </div>
-
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #000; background: #f9f9f9; padding: 12px 18px;">
-                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                                <a href="/vote/{{ post.raw_id }}/true" style="text-decoration: none; background: #ffd700; color: #000; font-weight: 800; padding: 8px 15px; border: 1px solid #000; font-size: 14px; display: inline-block;">
-                                    ▲ এই রিপোর্ট সত্য <span style="background: #000; color: #fff; padding: 2px 7px; margin-left: 5px; font-size: 12px;">{{ post.true_votes }}</span>
-                                </a>
-                                
-                                <a href="/vote/{{ post.raw_id }}/false" style="text-decoration: none; background: #fff; color: #cc0000; font-weight: 800; padding: 8px 12px; border: 1px solid #ccc; font-size: 13px; display: inline-block;">
-                                    ✖ মিথ্যা ({{ post.false_votes }})
-                                </a>
-                            </div>
-
-                            <div style="font-size: 13px; color: #444; font-weight: 700;">
-                                🕒 {{ post.created_at_bn }}
-                            </div>
-                        </div>
-
+                        {% endfor %}
                     </div>
                 {% else %}
-                    <div style="background: #fff; border: 1px solid #000; padding: 35px; text-align: center; margin-bottom: 30px;">
-                        <p style="margin: 0; font-weight: bold; color: #555; font-size: 16px;">এই মুহূর্তে কোনো লাইভ রিপোর্ট নেই। আপনি নিজে একটি রিপোর্ট সাবমিট করতে পারেন!</p>
+                    <div class="bg-white border border-slate-200 p-12 rounded-2xl text-center">
+                        <p class="text-slate-400 text-sm font-medium">এই মুহূর্তে এই থানায় কোনো রিপোর্ট বা অভিযোগ পাওয়া যায়নি।</p>
                     </div>
-                {% endfor %}
+                {% endif %}
             </div>
 
         </div>
 
-        <div class="sidebar">
-            <h3>কিশোরগঞ্জ থানা লেজার</h3>
-            <a href="/" class="thana-item" style="font-weight: bold; background: #ffd700;">
-                <span>সকল থানা / উপজেলা</span>
-                <span>({{ total_count }})</span>
-            </a>
-            {% for thana in thanas %}
-                <a href="/?thana={{ thana }}#recent-reports" class="thana-item">
-                    <span>📍 {{ thana }}</span>
-                    <span>({{ thana_counts[thana] }})</span>
-                </a>
-            {% endfor %}
-        </div>
+    </main>
 
-    </div>
-
-    <div id="privacyModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closePrivacyModal()">&times;</span>
-            <h2 style="margin-top: 0; border-bottom: 2px solid #ffd700; padding-bottom: 8px;">গোপনীয়তা ও নীতিমালা</h2>
+    <!-- Modals -->
+    <div id="privacyModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white max-w-lg w-full rounded-3xl p-6 shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto">
+            <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                <h3 class="font-black text-lg text-slate-900"> গোপনীয়তা ও নিরাপত্তা নীতি</h3>
+                <button onclick="closeModal('privacyModal')" class="text-slate-400 hover:text-slate-900 font-bold text-lg cursor-pointer">✕</button>
+            </div>
+            <div class="space-y-3 text-xs sm:text-sm text-slate-700 leading-relaxed">
+                <p><strong>অভিযোগ সংগ্রহ করি, ব্যক্তি নয়:</strong> জনতার খাতা আপনার জমা দেওয়া রিপোর্টের ঘরগুলো সংরক্ষণ করে। আপনি স্বেচ্ছায় যোগাযোগের তথ্য দিলে তা মডারেশনের জন্য আলাদা ব্যক্তিগত টেবিলে সংরক্ষিত হয় এবং পাবলিক রিপোর্টে কখনো থাকে না。</p>
             
-            <div class="privacy-box">
-                <h4 style="margin: 0 0 5px 0; color: #28a745;">✅ আমরা যা যা করি না:</h4>
-                <ul style="margin: 5px 0; padding-left: 20px; font-size: 14px; line-height: 1.6;">
-                    <li>নাম, ইমেইল, ফোন নম্বর বা কোনো অ্যাকাউন্ট ট্র্যাক করা হয় না।</li>
-                    <li>রিপোর্ট দিতে কোনো সাইন-আপ বা লগইন লাগে না।</li>
-                </ul>
+                <p><strong>যা সংরক্ষণ করে না:</strong> কোনো অ্যাকাউন্ট, সঠিক বাসার ঠিকানা, কাঁচা আইপি-অ্যাড্রেস কলাম, অ্যানালিটিক্স কুকি, বিজ্ঞাপন আইডেন্টিফায়ার বা ডিভাইস ফিঙ্গারপ্রিন্ট সংরক্ষণ করে না।</p>
             </div>
-
-            <div class="privacy-box" style="border-left-color: #000;">
-                <h4 style="margin: 0 0 5px 0; color: #000;">📋 আমরা যা সংগ্রহ করি:</h4>
-                <ul style="margin: 5px 0; padding-left: 20px; font-size: 14px; line-height: 1.6;">
-                    <li>শুধু উপজেলা ও দপ্তরের বিবরণ।</li>
-                    <li>একটি ডিভাইস থেকে যেন বারবার ভোট বা স্প্যাম না করা যায়, সেজন্য ব্রাউজারে অস্থায়ী কুকি সংরক্ষণ করা হয়।</li>
-                </ul>
+            <div class="pt-3 text-right">
+                <button onclick="closeModal('privacyModal')" class="bg-slate-900 text-white px-5 py-2 rounded-xl text-xs font-bold cursor-pointer">বুঝেছি</button>
             </div>
         </div>
     </div>
 
+    <div id="aboutModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white max-w-lg w-full rounded-3xl p-6 shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto">
+            <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                <h3 class="font-black text-lg text-slate-900"> আমরা কী করি, কী করি না</h3>
+                <button onclick="closeModal('aboutModal')" class="text-slate-400 hover:text-slate-900 font-bold text-lg cursor-pointer">✕</button>
+            </div>
+            <div class="space-y-3 text-xs sm:text-sm text-slate-700 leading-relaxed">
+                <p><strong>আমরা কী করি:</strong> কিশোরগঞ্জ জেলার বিভিন্ন দপ্তর, শিক্ষা, স্বাস্থ্য ও প্রশাসনিক খাতের অনিয়ম, দুর্নীতি ও ঘুষের বিরুদ্ধে সাধারণ মানুষের কণ্ঠস্বর হিসেবে কাজ করি এবং স্বচ্ছতা নিশ্চিত করতে ডিজিটাল খাতা পরিচালনা করি।</p>
+                <p><strong>আমরা কী করি না:</strong> আমরা কোনো ব্যক্তিবিশেষের বিরুদ্ধে ব্যক্তিগত আক্রোশমূলক বা মিথ্যা তথ্য প্রচার করি না। প্রতিটি জমা হওয়া রিপোর্ট পুঙ্খানুপুঙ্খ যাচাই ও মডারেশনের পরেই কেবল প্রকাশিত হয়।</p>
+            </div>
+            <div class="pt-3 text-right">
+                <button onclick="closeModal('aboutModal')" class="bg-slate-900 text-white px-5 py-2 rounded-xl text-xs font-bold cursor-pointer">বন্ধ করুন</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
     <script>
-        function openPrivacyModal() {
-            document.getElementById('privacyModal').style.display = 'flex';
-        }
-        function closePrivacyModal() {
-            document.getElementById('privacyModal').style.display = 'none';
-        }
-        window.onclick = function(event) {
-            var modal = document.getElementById('privacyModal');
-            if (event.target == modal) {
-                modal.style.display = 'none';
-            }
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+        function sendVote(postId, voteType) {
+            fetch('/api/vote/' + postId + '/' + voteType, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success) {
+                    document.getElementById('true-count-' + postId).innerText = data.true_votes;
+                    document.getElementById('false-count-' + postId).innerText = data.false_votes;
+
+                    const btnTrue = document.getElementById('btn-true-' + postId);
+                    const btnFalse = document.getElementById('btn-false-' + postId);
+
+                    if(data.voted_type === 'true') {
+                        btnTrue.className = "flex-1 font-black px-2 py-1.5 text-[11px] text-center transition-all border rounded-lg shadow-2xs bg-amber-500 text-slate-950 border-amber-600 ring-2 ring-amber-300 cursor-not-allowed";
+                        btnFalse.className = "flex-1 font-bold px-2 py-1.5 text-[11px] text-center transition-all rounded-lg shadow-2xs bg-amber-100 text-slate-400 border-amber-200 opacity-60 cursor-not-allowed";
+                    } else {
+                        btnFalse.className = "flex-1 font-black px-2 py-1.5 text-[11px] text-center transition-all rounded-lg shadow-2xs bg-slate-900 text-white ring-2 ring-slate-700 cursor-not-allowed";
+                        btnTrue.className = "flex-1 font-bold px-2 py-1.5 text-[11px] text-center transition-all border rounded-lg shadow-2xs bg-slate-200 text-slate-400 border-slate-300 opacity-60 cursor-not-allowed";
+                    }
+
+                    btnTrue.disabled = true;
+                    btnFalse.disabled = true;
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
         }
     </script>
+
+    <footer class="mt-12 text-center text-xs text-slate-400 py-6 border-t border-slate-200 bg-white">
+        জনতার খাতা - কিশোরগঞ্জ © ২০২৬ | স্বচ্ছতা ও জবাবদিহিতা নিশ্চিতকরণ প্ল্যাটফর্ম
+    </footer>
 
 </body>
 </html>
