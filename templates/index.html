@@ -6,9 +6,9 @@
     <title>জনতার খাতা - কিশোরগঞ্জ</title>
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- SolaimanLipi Font Import for Posts -->
+    <!-- SolaimanLipi Font Import for Posts & Hind Siliguri for UI -->
     <link href="https://fonts.maateen.me/solaiman-lipi/font.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <style>
         /* Base UI Font */
@@ -24,13 +24,13 @@
             color: #1e293b;
         }
 
-        /* Pulse Animation for Main CTA Button */
-        @keyframes pulse-red {
+        /* Pulse Animation for Green CTA Button */
+        @keyframes pulse-green {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.03); }
         }
         .animate-pulse-btn {
-            animation: pulse-red 2s infinite;
+            animation: pulse-green 2s infinite;
         }
     </style>
 </head>
@@ -86,7 +86,7 @@
     <!-- Main Content Container -->
     <main class="w-full px-3 sm:px-6 lg:px-12 py-6 flex-1">
 
-        <!-- Hero Slogan Banner + Eye-Catching Report Button -->
+        <!-- Hero Slogan Banner + Green Report Button (No Mike Icon, Bold Font) -->
         <div class="text-center py-6 sm:py-8 mb-8 border-b border-slate-200 bg-white rounded-3xl shadow-sm px-4">
             <h1 class="text-xl sm:text-3xl lg:text-4xl font-black text-slate-900 leading-tight mb-2">
                 চুপ থাকা মানে <span class="bg-amber-300 px-2 py-1 rounded-xl shadow-sm">অনিয়মকে প্রশ্রয় দেওয়া।</span>
@@ -95,12 +95,11 @@
                 কিশোরগঞ্জের অনিয়মগুলো এবার <span class="bg-amber-300 px-2 py-1 rounded-xl shadow-sm">খাতায় উঠুক।</span>
             </p>
 
-            <!-- BIG HIGH-VISIBILITY REPORT BUTTON -->
+            <!-- GREEN BOLD REPORT BUTTON WITHOUT MIKE ICON -->
             <div class="flex justify-center my-3">
-                <a href="{{ url_for('submit') }}" class="animate-pulse-btn bg-red-600 hover:bg-red-700 text-white text-base sm:text-xl font-black px-8 py-4 rounded-2xl shadow-xl transition-all flex items-center gap-3 border-2 border-red-500">
-                    <span class="text-xl sm:text-2xl">📢</span>
+                <a href="{{ url_for('submit') }}" class="animate-pulse-btn bg-emerald-600 hover:bg-emerald-700 text-white text-lg sm:text-2xl font-black px-8 py-4 rounded-2xl shadow-xl transition-all flex items-center gap-3 border-2 border-emerald-500 tracking-wide">
                     <span>আপনার এলাকার অনিয়মের রিপোর্ট করুন</span>
-                    <span class="text-xl">➔</span>
+                    <span class="text-2xl">➔</span>
                 </a>
             </div>
         </div>
@@ -275,10 +274,10 @@
 
     </main>
 
-    <!-- FLOATING REPORT BUTTON (Always visible on bottom right) -->
-    <a href="{{ url_for('submit') }}" class="fixed bottom-6 right-6 z-40 bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-3 sm:px-5 sm:py-3.5 rounded-full shadow-2xl border-2 border-white transition-all flex items-center gap-2 text-sm sm:text-base animate-bounce">
-        <span class="text-lg">📢</span>
+    <!-- FLOATING GREEN REPORT BUTTON (No Mike Icon, Extra Bold Font) -->
+    <a href="{{ url_for('submit') }}" class="fixed bottom-6 right-6 z-40 bg-emerald-600 hover:bg-emerald-700 text-white font-black px-5 py-3.5 sm:px-6 sm:py-4 rounded-full shadow-2xl border-2 border-white transition-all flex items-center gap-2 text-sm sm:text-base tracking-wide animate-bounce">
         <span>রিপোর্ট করুন</span>
+        <span class="text-lg">➔</span>
     </a>
 
     <!-- Modals -->
