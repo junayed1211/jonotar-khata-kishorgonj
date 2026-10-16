@@ -25,11 +25,11 @@
                 <!-- Policy & Info Navigation -->
                 <div class="hidden xl:flex items-center gap-6 text-xs font-bold text-slate-700">
                     <button onclick="openModal('privacyModal')" class="hover:text-emerald-600 transition-colors flex items-center gap-1.5 cursor-pointer">
-                         গোপনীয়তা ও নিরাপত্তা
+                         গোপনীয়তা
                     </button>
                     <span class="text-slate-300">|</span>
                     <button onclick="openModal('aboutModal')" class="hover:text-emerald-600 transition-colors flex items-center gap-1.5 cursor-pointer">
-                         আমরা কী করি, কী করি না
+                         নিরাপত্তা 
                     </button>
                 </div>
 
@@ -48,7 +48,7 @@
         {% if notice %}
         <div class="bg-red-700 text-white flex items-center overflow-hidden h-10 border-t border-red-800">
             <div class="bg-amber-400 text-slate-900 font-black text-xs sm:text-sm px-4 sm:px-5 h-full flex items-center whitespace-nowrap z-10 shadow-md shrink-0">
-                🚨 জরুরি নোটিশ
+                 জরুরি নোটিশ
             </div>
             <div class="overflow-hidden w-full flex items-center px-2">
                 <marquee scrollamount="5" scrolldelay="60" class="text-xs sm:text-sm font-bold tracking-wide text-white" onmouseover="this.stop();" onmouseout="this.start();">
@@ -73,7 +73,7 @@
 
         <!-- Hero Slogan Banner with Background Image & Expanded Side Texts -->
         <div class="text-center py-10 sm:py-16 mb-8 border border-slate-200 bg-cover bg-center rounded-3xl shadow-sm px-6 relative flex flex-col lg:flex-row items-center justify-between gap-6 overflow-hidden"
-             style="background-image: linear-gradient(rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.88)), url('{{ url_for('static', filename='hero-bg.jpg') }}');">
+             style="background-image: linear-gradient(rgba(255, 255, 255, 0.40), rgba(255, 255, 255, 0.40)), url('{{ url_for('static', filename='hero-bg.jpg') }}');">
             
             <!-- Left Side Text -->
             <div class="hidden lg:block w-80 text-left px-6">
@@ -94,7 +94,7 @@
                 <!-- Green Report Button inside Hero Banner -->
                 <div class="flex justify-center my-3">
                     <a href="{{ url_for('submit') }}" class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm sm:text-base font-semibold px-6 py-3 rounded-xl shadow-md hover:shadow-lg transition-all inline-flex items-center gap-2">
-                        📢 আপনার এলাকার অনিয়মের রিপোর্ট করুন ➔
+                         আপনার এলাকার অনিয়মের রিপোর্ট করুন ➔
                     </a>
                 </div>
             </div>
@@ -102,7 +102,7 @@
             <!-- Right Side Text -->
             <div class="hidden lg:block w-80 text-right px-6">
                 <p class="text-base sm:text-lg font-bold text-slate-900 whitespace-pre-line leading-relaxed drop-shadow-sm">
-                    {% if hero_text %}{{ hero_text.right_text }}{% else %}📢 আপনার পরিচয়<br>সম্পূর্ণ গোপন থাকে{% endif %}
+                    {% if hero_text %}{{ hero_text.right_text }}{% else %} আপনার পরিচয়<br>সম্পূর্ণ গোপন থাকে{% endif %}
                 </p>
             </div>
         </div>
