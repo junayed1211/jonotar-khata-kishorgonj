@@ -4,150 +4,141 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>জনতার খাতা - কিশোরগঞ্জ</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    
+    <!-- SolaimanLipi Font Import for Posts & Hind Siliguri for UI -->
+    <link href="https://fonts.maateen.me/solaiman-lipi/font.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* Base UI Font */
+        body { font-family: 'Hind Siliguri', sans-serif; }
+
+        /* ONLY Post Body uses SolaimanLipi, Justify Alignment and Proper Line Height */
+        .post-justify-text {
+            font-family: 'SolaimanLipi', sans-serif !important;
+            font-size: 16px !important;
+            line-height: 1.8 !important;
+            text-align: justify !important;
+            text-justify: inter-word;
+            color: #1e293b;
+        }
+
+        /* Pulse Animation for Green CTA Button */
+        @keyframes pulse-green {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+        .animate-pulse-btn {
+            animation: pulse-green 2s infinite;
+        }
+    </style>
 </head>
-<body class="bg-gray-100 font-sans text-gray-800 flex flex-col min-h-screen">
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col relative">
 
-    <!-- Top Bar / Sub Header -->
-    <div class="bg-white border-b py-2 px-4 text-xs text-gray-600">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-4">
-                <span>গোপনীয়তা & নিরাপত্তা</span>
-                <span>|</span>
-                <span>আমরা কী করি, কী করি না</span>
+    <!-- Sticky Header & Notice Wrapper -->
+    <div class="sticky top-0 z-50 shadow-md">
+        <header class="bg-white border-b border-slate-200">
+            <div class="w-full px-4 sm:px-10 h-16 flex items-center justify-between gap-4">
+                <!-- Logo -->
+                <a href="{{ url_for('index') }}" class="flex items-center gap-2 text-lg sm:text-2xl font-black text-slate-900 tracking-tight shrink-0">
+                    <span>জনতার খাতা</span>
+                    <span class="bg-amber-400 text-slate-900 px-2.5 py-0.5 rounded-lg text-sm sm:text-base font-bold shadow-sm">কিশোরগঞ্জ</span>
+                </a>
+
+                <!-- Policy & Info Navigation -->
+                <div class="hidden xl:flex items-center gap-6 text-sm font-bold text-slate-700">
+                    <button onclick="openModal('privacyModal')" class="hover:text-red-600 transition-colors flex items-center gap-1.5 cursor-pointer">
+                         গোপনীয়তা ও নিরাপত্তা
+                    </button>
+                    <span class="text-slate-300">|</span>
+                    <button onclick="openModal('aboutModal')" class="hover:text-red-600 transition-colors flex items-center gap-1.5 cursor-pointer">
+                         আমরা কী করি, কী করি না
+                    </button>
+                </div>
+
+                <!-- Right Action Buttons -->
+                <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+                    <a href="{{ url_for('submit') }}" class="bg-red-600 hover:bg-red-700 text-white text-xs sm:text-sm font-bold px-3 sm:px-4 py-2 rounded-xl shadow transition-all flex items-center gap-1">
+                        <span>রিপোর্ট করুন</span> <span class="hidden sm:inline">→</span>
+                    </a>
+                    <a href="{{ url_for('admin') }}" class="bg-slate-900 hover:bg-black text-white text-xs sm:text-sm font-bold px-3 py-2 rounded-xl shadow transition-all flex items-center gap-1">
+                        <span> Admin</span>
+                    </a>
+                </div>
             </div>
-            <div class="flex items-center gap-2">
-                <a href="/submit" class="bg-red-600 hover:bg-red-700 text-white font-medium px-3 py-1 rounded-full text-xs flex items-center gap-1">
-                    রিপোর্ট করুন <i class="fas fa-arrow-right"></i>
-                </a>
-                <a href="/admin" class="bg-slate-900 hover:bg-slate-800 text-white font-medium px-3 py-1 rounded text-xs">
-                    Admin
-                </a>
+        </header>
+
+        {% if notice %}
+        <div class="bg-red-700 text-white flex items-center overflow-hidden h-10 border-t border-red-800">
+            <div class="bg-amber-400 text-slate-900 font-black text-xs sm:text-sm px-4 sm:px-5 h-full flex items-center whitespace-nowrap z-10 shadow-md shrink-0">
+                🚨 জরুরি নোটিশ
+            </div>
+            <div class="overflow-hidden w-full flex items-center px-2">
+                <marquee scrollamount="5" scrolldelay="60" class="text-xs sm:text-sm font-bold tracking-wide text-white" onmouseover="this.stop();" onmouseout="this.start();">
+                    {{ notice.content }}
+                </marquee>
             </div>
         </div>
+        {% endif %}
     </div>
 
-    <!-- Main Navigation Bar -->
-    <nav class="bg-white border-b shadow-sm sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <a href="/" class="text-2xl font-black text-black tracking-tight">জনতার খাতা</a>
-                <span class="bg-amber-400 text-black text-xs font-bold px-2 py-0.5 rounded">কিশোরগঞ্জ</span>
-            </div>
-        </div>
-    </nav>
+    <!-- Main Content Container -->
+    <main class="w-full px-3 sm:px-6 lg:px-12 py-6 flex-1">
 
-    <!-- Emergency Notice Ticker -->
-    <div class="bg-red-700 text-white text-xs font-medium py-1.5 px-4 flex items-center gap-2">
-        <span class="bg-amber-400 text-black font-bold px-2 py-0.5 rounded text-[10px] uppercase flex items-center gap-1">
-            <i class="fas fa-bullhorn"></i> জরুরি নোটিশ
-        </span>
-        <marquee class="w-full">
-            পোস্ট গুলো প্রতিদিন সকাল ১১ টা এবং রাত ৮ টায় একবার করে আপডেট করা হয়। আপনার সাথে ঘটে যাওয়া অনিয়ম গুলো এখনই জনতার খাতায় তুলে রাখুন। আপনার পরিচয় থাকবে সম্পূর্ণ গোপন।
-        </marquee>
-    </div>
-
-    <!-- Hero Banner with Custom Background Image -->
-    <div class="relative bg-cover bg-center py-12 px-4 text-center border-b shadow-inner" 
-         style="background-image: linear-gradient(rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.88)), url('{{ url_for('static', filename='hero-bg.jpg') }}');">
-        <div class="max-w-4xl mx-auto">
-            <h1 class="text-3xl md:text-4xl font-black text-black mb-3 leading-snug">
-                চুপ থাকা মানে <span class="bg-amber-300 px-2 py-0.5 rounded">অনিয়মকে প্রশ্রয় দেওয়া।</span><br>
-                কিশোরগঞ্জের অনিয়মগুলো এবার <span class="bg-amber-300 px-2 py-0.5 rounded">খাতায় উঠুক।</span>
+        <!-- Hero Slogan Banner with Custom Background Image -->
+        <div class="text-center py-8 sm:py-12 mb-8 border border-slate-200 rounded-3xl shadow-sm px-4 bg-cover bg-center overflow-hidden relative"
+             style="background-image: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), url('{{ url_for('static', filename='hero-bg.jpg') }}');">
+            <h1 class="text-xl sm:text-3xl lg:text-4xl font-black text-slate-900 leading-tight mb-2">
+                চুপ থাকা মানে <span class="bg-amber-300 px-2 py-1 rounded-xl shadow-sm">অনিয়মকে প্রশ্রয় দেওয়া।</span>
             </h1>
-            <div class="mt-6">
-                <a href="/submit" class="bg-red-600 hover:bg-red-700 text-white text-base font-bold px-6 py-3 rounded-xl shadow-md hover:shadow-lg transition inline-flex items-center gap-2">
-                    <i class="fas fa-bullhorn"></i> আপনার এলাকার অনিয়মের রিপোর্ট করুন <i class="fas fa-arrow-right"></i>
+            <p class="text-lg sm:text-2xl lg:text-3xl font-black text-slate-900 mb-6">
+                কিশোরগঞ্জের অনিয়মগুলো এবার <span class="bg-amber-300 px-2 py-1 rounded-xl shadow-sm">খাতায় উঠুক।</span>
+            </p>
+
+            <!-- GREEN BOLD REPORT BUTTON WITHOUT MIKE ICON -->
+            <div class="flex justify-center my-3">
+                <a href="{{ url_for('submit') }}" class="animate-pulse-btn bg-emerald-600 hover:bg-emerald-700 text-white text-lg sm:text-2xl font-black px-8 py-4 rounded-2xl shadow-xl transition-all flex items-center gap-3 border-2 border-emerald-500 tracking-wide">
+                    <span>আপনার এলাকার অনিয়মের রিপোর্ট করুন</span>
+                    <span class="text-2xl">➔</span>
                 </a>
             </div>
         </div>
-    </div>
 
-    <!-- Stats Section (Cards) -->
-    <section class="max-w-7xl mx-auto px-4 py-6 w-full">
-        <div class="grid md:grid-cols-3 gap-4">
-            
-            <!-- Today's Report Card -->
-            <div class="bg-white p-4 rounded-xl border border-red-100 shadow-sm">
-                <div class="flex justify-between items-center mb-3 border-b pb-2">
-                    <h3 class="font-bold text-gray-800">আজকের রিপোর্ট</h3>
-                    <span class="bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">১০০% নিশ্চিত</span>
+        <!-- Analytics Cards -->
+        <div id="analytics" class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+            <!-- Today Report -->
+            <div class="bg-gradient-to-br from-white to-red-50/50 p-5 rounded-3xl border-2 border-red-100 shadow-md">
+                <div class="flex justify-between items-center pb-3 mb-3 border-b border-red-100">
+                    <h3 class="font-black text-slate-900 text-base sm:text-lg"> আজকের রিপোর্ট</h3>
+                    <span class="text-xs bg-red-600 text-white font-bold px-3 py-1 rounded-full shadow-sm">{{ today_metrics.rating }}</span>
                 </div>
-                <div class="space-y-2 text-xs">
-                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded">
-                        <span class="text-gray-600">সর্বমোট অভিযোগ</span>
-                        <span class="font-bold text-red-600 text-sm">২টি</span>
+                <div class="space-y-3 text-sm">
+                    <div class="flex justify-between items-center bg-white px-3.5 py-2 rounded-xl border border-red-100 shadow-sm">
+                        <span class="text-slate-600 font-semibold text-xs sm:text-sm">সর্বমোট অভিযোগ</span>
+                        <span class="font-black text-red-600 text-sm sm:text-base bg-red-50 px-2 py-0.5 rounded-lg">{{ today_metrics.count }}টি</span>
                     </div>
-                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded">
-                        <span class="text-gray-600">শীর্ষ দপ্তর</span>
-                        <span class="bg-red-50 text-red-700 px-2 py-0.5 rounded font-medium">সরকারী হাসপাতাল</span>
+                    <div class="flex justify-between items-center bg-white px-3.5 py-2 rounded-xl border border-red-100 shadow-sm">
+                        <span class="text-slate-600 font-semibold text-xs sm:text-sm">শীর্ষ দপ্তর</span>
+                        <span class="font-bold text-red-900 bg-red-100/80 px-2.5 py-1 rounded-lg text-xs sm:text-sm">{{ today_metrics.top_dept }}</span>
                     </div>
-                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded">
-                        <span class="text-gray-600">শীর্ষ উপজেলা</span>
-                        <span class="bg-red-50 text-red-700 px-2 py-0.5 rounded font-medium">কিশোরগঞ্জ সদর</span>
+                    <div class="flex justify-between items-center bg-white px-3.5 py-2 rounded-xl border border-red-100 shadow-sm">
+                        <span class="text-slate-600 font-semibold text-xs sm:text-sm">শীর্ষ উপজেলা</span>
+                        <span class="font-bold text-red-900 bg-red-100/80 px-2.5 py-1 rounded-lg text-xs sm:text-sm">{{ today_metrics.top_thana }}</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Last 30 Days Report Card -->
-            <div class="bg-white p-4 rounded-xl border border-blue-100 shadow-sm">
-                <div class="flex justify-between items-center mb-3 border-b pb-2">
-                    <h3 class="font-bold text-gray-800">গত ৩০ দিনের রিপোর্ট</h3>
-                    <span class="bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">১০০% নিশ্চিত</span>
+            <!-- Last Month Report -->
+            <div class="bg-gradient-to-br from-white to-blue-50/50 p-5 rounded-3xl border-2 border-blue-100 shadow-md">
+                <div class="flex justify-between items-center pb-3 mb-3 border-b border-blue-100">
+                    <h3 class="font-black text-slate-900 text-base sm:text-lg"> গত ৩০ দিনের রিপোর্ট</h3>
+                    <span class="text-xs bg-blue-600 text-white font-bold px-3 py-1 rounded-full shadow-sm">{{ monthly_metrics.rating }}</span>
                 </div>
-                <div class="space-y-2 text-xs">
-                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded">
-                        <span class="text-gray-600">সর্বমোট অভিযোগ</span>
-                        <span class="font-bold text-blue-600 text-sm">২টি</span>
+                <div class="space-y-3 text-sm">
+                    <div class="flex justify-between items-center bg-white px-3.5 py-2 rounded-xl border border-blue-100 shadow-sm">
+                        <span class="text-slate-600 font-semibold text-xs sm:text-sm">সর্বমোট অভিযোগ</span>
+                        <span class="font-black text-blue-600 text-sm sm:text-base bg-blue-50 px-2 py-0.5 rounded-lg">{{ monthly_metrics.count }}টি</span>
                     </div>
-                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded">
-                        <span class="text-gray-600">শীর্ষ দপ্তর</span>
-                        <span class="bg-blue-50 text-blue-700 px-2 py-0.5 rounded font-medium">সরকারী হাসপাতাল</span>
-                    </div>
-                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded">
-                        <span class="text-gray-600">শীর্ষ উপজেলা</span>
-                        <span class="bg-blue-50 text-blue-700 px-2 py-0.5 rounded font-medium">কিশোরগঞ্জ সদর</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Total Report Card -->
-            <div class="bg-white p-4 rounded-xl border border-amber-100 shadow-sm">
-                <div class="flex justify-between items-center mb-3 border-b pb-2">
-                    <h3 class="font-bold text-gray-800">সর্বমোট রিপোর্ট</h3>
-                    <span class="bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">১০০% নিশ্চিত</span>
-                </div>
-                <div class="space-y-2 text-xs">
-                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded">
-                        <span class="text-gray-600">সর্বমোট অভিযোগ</span>
-                        <span class="font-bold text-amber-600 text-sm">২টি</span>
-                    </div>
-                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded">
-                        <span class="text-gray-600">শীর্ষ দপ্তর</span>
-                        <span class="bg-amber-50 text-amber-800 px-2 py-0.5 rounded font-medium">সরকারী হাসপাতাল</span>
-                    </div>
-                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded">
-                        <span class="text-gray-600">শীর্ষ উপজেলা</span>
-                        <span class="bg-amber-50 text-amber-800 px-2 py-0.5 rounded font-medium">কিশোরগঞ্জ সদর</span>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-    <!-- Main Content Area: Sidebar + Complaints Feed -->
-    <main class="max-w-7xl mx-auto px-4 py-4 grid md:grid-cols-4 gap-6 flex-grow w-full">
-        
-        <!-- Left Sidebar: Thana Ledger -->
-        <aside class="md:col-span-1 bg-slate-900 text-white rounded-xl p-4 h-fit">
-            <div class="flex justify-between items-center mb-4 border-b border-slate-700 pb-2">
-                <h2 class="font-bold text-sm">কিশোরগঞ্জ থানা লেজার</h2>
-                <span class="bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded">রিপোর্ট</span>
-            </div>
-            <ul class="space-y-2 text-xs">
-                <li class="flex justify-between items-center bg-slate-800 p-2 rounded hover:bg-slate-700 cursor-pointer">
-                    <span>কিশোরগঞ্জ সদর</span>
-                    <span class="
+                    <div class="flex justify-between items-center bg-white px-3.5 py-2 rounded-xl border border-blue-100 shadow-sm">
+                        <span class="text-slate-600
