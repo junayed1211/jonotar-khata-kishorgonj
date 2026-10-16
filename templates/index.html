@@ -60,13 +60,22 @@
     <!-- Main Content Container -->
     <main class="w-full px-3 sm:px-6 lg:px-12 py-6 flex-1">
 
-        <!-- Hero Slogan Banner with Background Image & Dynamic Side Texts -->
-        <div class="text-center py-8 sm:py-12 mb-8 border-b border-slate-200 bg-cover bg-center rounded-3xl shadow-sm px-4 relative flex flex-col lg:flex-row items-center justify-between gap-6"
-             style="background-image: linear-gradient(rgba(255, 255, 255, 0.90), rgba(255, 255, 255, 0.90)), url('{{ url_for('static', filename='hero-bg.jpg') }}');">
+        <!-- Flash Message Notification on Home Page -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="max-w-4xl mx-auto mb-6 bg-emerald-50 border-2 border-emerald-400 text-emerald-800 px-6 py-4 rounded-2xl text-sm font-bold shadow-md text-center">
+                    ✨ {{ messages[0] }}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Hero Slogan Banner with Background Image & Direct Background Side Texts -->
+        <div class="text-center py-10 sm:py-14 mb-8 border border-slate-200 bg-cover bg-center rounded-3xl shadow-sm px-6 relative flex flex-col lg:flex-row items-center justify-between gap-6 overflow-hidden"
+             style="background-image: linear-gradient(rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.88)), url('{{ url_for('static', filename='hero-bg.jpg') }}');">
             
-            <!-- Left Side Box (Admin Controlled) -->
-            <div class="hidden lg:block w-64 bg-white/80 backdrop-blur-sm border border-slate-200/80 p-4 rounded-2xl shadow-sm text-center">
-                <p class="text-xs font-bold text-slate-700 whitespace-pre-line leading-relaxed">
+            <!-- Left Side Text directly on Background (Larger Area & Same Font Style) -->
+            <div class="hidden lg:block w-72 text-left px-4">
+                <p class="text-sm sm:text-base font-extrabold text-slate-900 whitespace-pre-line leading-relaxed drop-shadow-sm">
                     {% if hero_text %}{{ hero_text.left_text }}{% else %}📍 কিশোরগঞ্জ জেলা<br>১৩ টি উপজেলা{% endif %}
                 </p>
             </div>
@@ -88,9 +97,9 @@
                 </div>
             </div>
 
-            <!-- Right Side Box (Admin Controlled) -->
-            <div class="hidden lg:block w-64 bg-white/80 backdrop-blur-sm border border-slate-200/80 p-4 rounded-2xl shadow-sm text-center">
-                <p class="text-xs font-bold text-slate-700 whitespace-pre-line leading-relaxed">
+            <!-- Right Side Text directly on Background (Larger Area & Same Font Style) -->
+            <div class="hidden lg:block w-72 text-right px-4">
+                <p class="text-sm sm:text-base font-extrabold text-slate-900 whitespace-pre-line leading-relaxed drop-shadow-sm">
                     {% if hero_text %}{{ hero_text.right_text }}{% else %}📢 আপনার পরিচয়<br>সম্পূর্ণ গোপন থাকে{% endif %}
                 </p>
             </div>
