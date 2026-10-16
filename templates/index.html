@@ -91,7 +91,7 @@
                     কিশোরগঞ্জের অনিয়মগুলো এবার <span class="bg-amber-300 px-2.5 py-1 rounded-xl shadow-sm">খাতায় উঠুক।</span>
                 </p>
 
-                <!-- Green Report Button inside Hero Banner[cite: 10] -->
+                <!-- Green Report Button inside Hero Banner -->
                 <div class="flex justify-center my-3">
                     <a href="{{ url_for('submit') }}" class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm sm:text-lg font-bold px-6 py-3 rounded-xl shadow-md hover:shadow-lg transition-all inline-flex items-center gap-2">
                         📢 আপনার এলাকার অনিয়মের রিপোর্ট করুন ➔
@@ -196,4 +196,164 @@
                         {% for t in thanas %}
                             <a href="{{ url_for('index', thana=t) }}" class="flex items-center justify-between px-4 py-3 transition-colors {% if selected_thana == t %}bg-emerald-600 text-white font-black text-base{% else %}hover:bg-slate-50 text-slate-800 font-bold text-sm{% endif %}">
                                 <span> {{ t }}</span>
-                                <span class="text-xs px-2.5 py-0.5 rounded {% if selected_thana == t %}bg-white/20
+                                <span class="text-xs px-2.5 py-0.5 rounded {% if selected_thana == t %}bg-white/20 text-white{% else %}bg-slate-100 text-slate-700{% endif %} font-black">({{ thana_counts[t] }})</span>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- দপ্তর লেজার -->
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="bg-amber-400 text-slate-950 px-4 py-3.5 font-black text-base flex items-center justify-between shadow-sm">
+                        <span>দপ্তর লেজার</span>
+                        <span class="text-xs bg-slate-900 text-white px-2.5 py-1 rounded font-black">রিপোর্ট</span>
+                    </div>
+                    <div class="divide-y divide-slate-100 text-sm">
+                        {% for dept in dept_list %}
+                            <div class="flex items-center justify-between px-4 py-3 text-slate-800 font-bold text-sm">
+                                <span> {{ dept }}</span>
+                                <span class="font-black text-slate-950 text-sm">({{ dept_counts.get(dept, '০') }})</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Right Content: Approved Posts Feed -->
+            <div class="lg:col-span-3 space-y-5">
+                <div class="flex justify-between items-center bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                    <h2 class="text-sm sm:text-base font-black text-slate-900">অনুমোদিত রিপোর্ট ও অভিযোগসমূহ</h2>
+                    <span class="text-xs text-slate-500 font-bold">ফিল্টারকৃত মোট: {{ posts|length }}টি</span>
+                </div>
+
+                {% if posts %}
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        {% for p in posts %}
+                            <div class="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm hover:border-slate-300 transition-all flex flex-col justify-between">
+                                <div>
+                                    <div class="flex flex-wrap justify-between items-center gap-1.5 text-xs text-slate-500 mb-3 pb-2.5 border-b border-slate-100">
+                                        <div class="flex items-center gap-1.5 flex-wrap">
+                                            <span class="bg-emerald-50 text-emerald-700 font-black px-2 py-0.5 rounded">#{{ p.index }}</span>
+                                            <span class="bg-slate-100 text-slate-800 font-bold px-2 py-0.5 rounded"> {{ p.thana }}</span>
+                                            <span class="bg-amber-50 text-amber-800 font-bold px-2 py-0.5 rounded"> {{ p.category }}</span>
+                                        </div>
+                                        <span class="font-semibold"> {{ p.created_at_bn }}</span>
+                                    </div>
+
+                                    <p class="text-slate-900 text-sm sm:text-base font-medium leading-relaxed whitespace-pre-line mb-4">{{ p.content }}</p>
+                                </div>
+
+                                <!-- Instant React Box -->
+                                <div class="bg-amber-50 border border-amber-200 p-2.5 rounded-xl flex flex-col gap-1.5 shadow-xs">
+                                    <span class="text-xs font-bold text-slate-800 text-center">এই রিপোর্টটি কি সঠিক? আপনার মতামত দিন:</span>
+                                    <div class="flex items-center gap-2">
+                                        <button onclick="sendVote({{ p.raw_id }}, 'true')" id="btn-true-{{ p.raw_id }}" 
+                                            class="flex-1 font-bold px-2.5 py-2 text-xs text-center transition-all border rounded-lg shadow-2xs cursor-pointer flex items-center justify-center gap-1
+                                            {% if p.voted_type == 'true' %} bg-amber-500 text-slate-950 border-amber-600 font-black ring-2 ring-amber-300 {% elif p.voted_type == 'false' %} bg-amber-100 text-slate-400 border-amber-200 opacity-60 cursor-not-allowed {% else %} bg-amber-300/80 hover:bg-amber-400 text-slate-900 border-amber-400 {% endif %}"
+                                            {% if p.voted_type %}disabled{% endif %}>
+                                            ▲ হ্যাঁ (<span id="true-count-{{ p.raw_id }}">{{ p.true_votes }}</span>)
+                                        </button>
+
+                                        <button onclick="sendVote({{ p.raw_id }}, 'false')" id="btn-false-{{ p.raw_id }}" 
+                                            class="flex-1 font-bold px-2.5 py-2 text-xs text-center transition-all rounded-lg shadow-2xs cursor-pointer flex items-center justify-center gap-1
+                                            {% if p.voted_type == 'false' %} bg-slate-900 text-white font-black ring-2 ring-slate-700 {% elif p.voted_type == 'true' %} bg-slate-200 text-slate-400 opacity-60 cursor-not-allowed {% else %} bg-slate-800 hover:bg-slate-900 text-white {% endif %}"
+                                            {% if p.voted_type %}disabled{% endif %}>
+                                            ▼ না (<span id="false-count-{{ p.raw_id }}">{{ p.false_votes }}</span>)
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="bg-white border border-slate-200 p-12 rounded-2xl text-center">
+                        <p class="text-slate-400 text-sm font-bold">এই মুহূর্তে এই থানায় কোনো রিপোর্ট বা অভিযোগ পাওয়া যায়নি।</p>
+                    </div>
+                {% endif %}
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Floating Green Report Button (Bottom Right) -->
+    <a href="{{ url_for('submit') }}" class="fixed bottom-6 right-6 z-50 bg-emerald-600 hover:bg-emerald-700 text-white font-black px-5 py-3.5 rounded-full shadow-2xl transition-all flex items-center gap-2 text-sm">
+        📢 রিপোর্ট করুন
+    </a>
+
+    <!-- Modals -->
+    <div id="privacyModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white max-w-lg w-full rounded-3xl p-6 shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto">
+            <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                <h3 class="font-black text-lg text-slate-900"> গোপনীয়তা ও নিরাপত্তা নীতি</h3>
+                <button onclick="closeModal('privacyModal')" class="text-slate-400 hover:text-slate-900 font-bold text-lg cursor-pointer">✕</button>
+            </div>
+            <div class="space-y-3 text-xs sm:text-sm text-slate-700 leading-relaxed">
+                <p><strong>অভিযোগ সংগ্রহ করি, ব্যক্তি নয়:</strong> জনতার খাতা আপনার জমা দেওয়া রিপোর্টের ঘরগুলো সংরক্ষণ করে। আপনি স্বেচ্ছায় যোগাযোগের তথ্য দিলে তা মডারেশনের জন্য আলাদা ব্যক্তিগত টেবিলে সংরক্ষিত হয় এবং পাবলিক রিপোর্টে কখনো থাকে না।</p>
+                <p><strong>যা সংরক্ষণ করে না:</strong> কোনো অ্যাকাউন্ট, সঠিক বাসার ঠিকানা, কাঁচা আইপি-অ্যাড্রেস কলাম, অ্যানালিটিক্স কুকি, বিজ্ঞাপন আইডেন্টিফায়ার বা ডিভাইস ফিঙ্গারপ্রিন্ট সংরক্ষণ করে না।</p>
+            </div>
+            <div class="pt-3 text-right">
+                <button onclick="closeModal('privacyModal')" class="bg-slate-900 text-white px-5 py-2 rounded-xl text-xs font-bold cursor-pointer">বুঝেছি</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="aboutModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white max-w-lg w-full rounded-3xl p-6 shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto">
+            <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                <h3 class="font-black text-lg text-slate-900"> আমরা কী করি, কী করি না</h3>
+                <button onclick="closeModal('aboutModal')" class="text-slate-400 hover:text-slate-900 font-bold text-lg cursor-pointer">✕</button>
+            </div>
+            <div class="space-y-3 text-xs sm:text-sm text-slate-700 leading-relaxed">
+                <p><strong>আমরা কী করি:</strong> কিশোরগঞ্জ জেলার বিভিন্ন দপ্তর, শিক্ষা, স্বাস্থ্য ও প্রশাসনিক খাতের অনিয়ম, দুর্নীতি ও ঘুষের বিরুদ্ধে সাধারণ মানুষের কণ্ঠস্বর হিসেবে কাজ করি এবং স্বচ্ছতা নিশ্চিত করতে ডিজিটাল খাতা পরিচালনা করি।</p>
+                <p><strong>আমরা কী করি না:</strong> আমরা কোনো ব্যক্তিবিশেষের বিরুদ্ধে ব্যক্তিগত আক্রোশমূলক বা মিথ্যা তথ্য প্রচার করি না। প্রতিটি জমা হওয়া রিপোর্ট পুঙ্খানুপুঙ্খ যাচাই ও মডারেশনের পরেই কেবল প্রকাশিত হয়।</p>
+            </div>
+            <div class="pt-3 text-right">
+                <button onclick="closeModal('aboutModal')" class="bg-slate-900 text-white px-5 py-2 rounded-xl text-xs font-bold cursor-pointer">বন্ধ করুন</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+        function sendVote(postId, voteType) {
+            fetch('/api/vote/' + postId + '/' + voteType, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success) {
+                    document.getElementById('true-count-' + postId).innerText = data.true_votes;
+                    document.getElementById('false-count-' + postId).innerText = data.false_votes;
+
+                    const btnTrue = document.getElementById('btn-true-' + postId);
+                    const btnFalse = document.getElementById('btn-false-' + postId);
+
+                    if(data.voted_type === 'true') {
+                        btnTrue.className = "flex-1 font-black px-2 py-1.5 text-[11px] text-center transition-all border rounded-lg shadow-2xs bg-amber-500 text-slate-950 border-amber-600 ring-2 ring-amber-300 cursor-not-allowed";
+                        btnFalse.className = "flex-1 font-bold px-2 py-1.5 text-[11px] text-center transition-all rounded-lg shadow-2xs bg-amber-100 text-slate-400 border-amber-200 opacity-60 cursor-not-allowed";
+                    } else {
+                        btnFalse.className = "flex-1 font-black px-2 py-1.5 text-[11px] text-center transition-all rounded-lg shadow-2xs bg-slate-900 text-white ring-2 ring-slate-700 cursor-not-allowed";
+                        btnTrue.className = "flex-1 font-bold px-2 py-1.5 text-[11px] text-center transition-all border rounded-lg shadow-2xs bg-slate-200 text-slate-400 border-slate-300 opacity-60 cursor-not-allowed";
+                    }
+
+                    btnTrue.disabled = true;
+                    btnFalse.disabled = true;
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+
+    <footer class="mt-12 text-center text-xs text-slate-400 py-6 border-t border-slate-200 bg-white">
+        জনতার খাতা - কিশোরগঞ্জ © ২০২৬ | স্বচ্ছতা ও জবাবদিহিতা নিশ্চিতকরণ প্ল্যাটফর্ম
+    </footer>
+
+</body>
+</html>
