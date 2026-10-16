@@ -64,7 +64,6 @@ class AdminSetting(db.Model):
   password = db.Column(db.String(100), nullable=False)
 
 
-# Hero Side Texts Model for Admin Control
 class HeroText(db.Model):
   __tablename__ = 'hero_text'
   id = db.Column(db.Integer, primary_key=True)
@@ -296,8 +295,8 @@ def submit():
           Post(category=category, thana=thana, content=content, status='pending')
       )
       db.session.commit()
-      flash('আপনার রিপোর্টটি সফলভাবে জমা হয়েছে!')
-      return redirect(url_for('index'))  # সাবমিটের পর সরাসরি হোম পেজে যাবে
+      flash('আপনার রিপোর্টটি সফলভাবে জমা হয়েছে! অনুমোদনের পর হোম পেজে দেখানো হবে।')
+      return redirect(url_for('index'))
   return render_template('submit.html')
 
 
