@@ -86,9 +86,9 @@
     <!-- Main Content Container -->
     <main class="w-full px-3 sm:px-6 lg:px-12 py-6 flex-1">
 
-        <!-- Hero Slogan Banner with Custom Background Image -->
-        <div class="text-center py-8 sm:py-12 mb-8 border border-slate-200 rounded-3xl shadow-sm px-4 bg-cover bg-center overflow-hidden relative"
-             style="background-image: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), url('{{ url_for('static', filename='hero-bg.jpg') }}');">
+        <!-- Hero Slogan Banner + Green Report Button with Hero Background Image -->
+        <div class="text-center py-6 sm:py-8 mb-8 border border-slate-200 bg-white rounded-3xl shadow-sm px-4 bg-cover bg-center relative overflow-hidden"
+             style="background-image: linear-gradient(rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.88)), url('{{ url_for('static', filename='hero-bg.jpg') }}');">
             <h1 class="text-xl sm:text-3xl lg:text-4xl font-black text-slate-900 leading-tight mb-2">
                 চুপ থাকা মানে <span class="bg-amber-300 px-2 py-1 rounded-xl shadow-sm">অনিয়মকে প্রশ্রয় দেওয়া।</span>
             </h1>
@@ -141,4 +141,5 @@
                         <span class="font-black text-blue-600 text-sm sm:text-base bg-blue-50 px-2 py-0.5 rounded-lg">{{ monthly_metrics.count }}টি</span>
                     </div>
                     <div class="flex justify-between items-center bg-white px-3.5 py-2 rounded-xl border border-blue-100 shadow-sm">
-                        <span class="text-slate-600
+                        <span class="text-slate-600 font-semibold text-xs sm:text-sm">শীর্ষ দপ্তর</span>
+                        <span class="font-bold text-blue-900 bg-blue-100/80 px-2.5 py-1 rounded-lg text-xs sm:text-sm">{{ monthly_metrics.top_dept }}
