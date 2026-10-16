@@ -8,80 +8,146 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-slate-100 font-sans text-gray-800 flex flex-col min-h-screen">
+<body class="bg-gray-100 font-sans text-gray-800 flex flex-col min-h-screen">
 
-    <!-- Navbar -->
-    <nav class="bg-emerald-700 text-white shadow-lg sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
-            <a href="/" class="text-2xl font-bold tracking-wide flex items-center gap-2">
-                <i class="fas fa-book-open"></i> জনতার খাতা
-            </a>
-            <div class="space-x-4">
-                <a href="/" class="hover:text-emerald-200 transition font-medium">হোম</a>
-                <a href="/submit" class="hover:text-emerald-200 transition font-medium">অভিযোগ জানান</a>
-                <a href="/admin" class="hover:text-emerald-200 transition font-medium">এডমিন</a>
+    <!-- Top Bar / Sub Header -->
+    <div class="bg-white border-b py-2 px-4 text-xs text-gray-600">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <span>গোপনীয়তা & নিরাপত্তা</span>
+                <span>|</span>
+                <span>আমরা কী করি, কী করি না</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <a href="/submit" class="bg-red-600 hover:bg-red-700 text-white font-medium px-3 py-1 rounded-full text-xs flex items-center gap-1">
+                    রিপোর্ট করুন <i class="fas fa-arrow-right"></i>
+                </a>
+                <a href="/admin" class="bg-slate-900 hover:bg-slate-800 text-white font-medium px-3 py-1 rounded text-xs">
+                    Admin
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation Bar -->
+    <nav class="bg-white border-b shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <a href="/" class="text-2xl font-black text-black tracking-tight">জনতার খাতা</a>
+                <span class="bg-amber-400 text-black text-xs font-bold px-2 py-0.5 rounded">কিশোরগঞ্জ</span>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Banner with Background Image -->
-    <div class="relative bg-cover bg-center py-20 px-4 text-center border-b shadow-sm" 
-         style="background-image: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), url('{{ url_for('static', filename='hero-bg.jpg') }}');">
-        <div class="max-w-3xl mx-auto">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-emerald-900 mb-4 leading-tight">
-                চুপ থাকা মানে অন্যায়কে মেনে নেওয়া
+    <!-- Emergency Notice Ticker -->
+    <div class="bg-red-700 text-white text-xs font-medium py-1.5 px-4 flex items-center gap-2">
+        <span class="bg-amber-400 text-black font-bold px-2 py-0.5 rounded text-[10px] uppercase flex items-center gap-1">
+            <i class="fas fa-bullhorn"></i> জরুরি নোটিশ
+        </span>
+        <marquee class="w-full">
+            পোস্ট গুলো প্রতিদিন সকাল ১১ টা এবং রাত ৮ টায় একবার করে আপডেট করা হয়। আপনার সাথে ঘটে যাওয়া অনিয়ম গুলো এখনই জনতার খাতায় তুলে রাখুন। আপনার পরিচয় থাকবে সম্পূর্ণ গোপন।
+        </marquee>
+    </div>
+
+    <!-- Hero Banner with Custom Background Image -->
+    <div class="relative bg-cover bg-center py-12 px-4 text-center border-b shadow-inner" 
+         style="background-image: linear-gradient(rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.88)), url('{{ url_for('static', filename='hero-bg.jpg') }}');">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-3xl md:text-4xl font-black text-black mb-3 leading-snug">
+                চুপ থাকা মানে <span class="bg-amber-300 px-2 py-0.5 rounded">অনিয়মকে প্রশ্রয় দেওয়া।</span><br>
+                কিশোরগঞ্জের অনিয়মগুলো এবার <span class="bg-amber-300 px-2 py-0.5 rounded">খাতায় উঠুক।</span>
             </h1>
-            <p class="text-lg md:text-xl text-gray-700 mb-8 font-medium">
-                কিশোরগঞ্জ জেলার যেকোনো দুর্নীতির বিরুদ্ধে আপনার আওয়াজ তুলুন। আপনার পরিচয় সম্পূর্ণ গোপন থাকবে।
-            </p>
-            <a href="/submit" class="bg-emerald-600 hover:bg-emerald-700 text-white text-lg font-semibold px-8 py-3 rounded-full shadow-md hover:shadow-lg transition duration-300 inline-flex items-center gap-2">
-                <i class="fas fa-paper-plane"></i> অভিযোগ জমা দিন
-            </a>
+            <div class="mt-6">
+                <a href="/submit" class="bg-red-600 hover:bg-red-700 text-white text-base font-bold px-6 py-3 rounded-xl shadow-md hover:shadow-lg transition inline-flex items-center gap-2">
+                    <i class="fas fa-bullhorn"></i> আপনার এলাকার অনিয়মের রিপোর্ট করুন <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
         </div>
     </div>
 
-    <!-- Main Content -->
-    <main class="max-w-5xl mx-auto px-4 py-10 flex-grow w-full">
-        <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center border-b-2 border-emerald-600 pb-2 inline-block">
-            সাম্প্রতিক অভিযোগসমূহ
-        </h2>
+    <!-- Stats Section (Cards) -->
+    <section class="max-w-7xl mx-auto px-4 py-6 w-full">
+        <div class="grid md:grid-cols-3 gap-4">
+            
+            <!-- Today's Report Card -->
+            <div class="bg-white p-4 rounded-xl border border-red-100 shadow-sm">
+                <div class="flex justify-between items-center mb-3 border-b pb-2">
+                    <h3 class="font-bold text-gray-800">আজকের রিপোর্ট</h3>
+                    <span class="bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">১০০% নিশ্চিত</span>
+                </div>
+                <div class="space-y-2 text-xs">
+                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded">
+                        <span class="text-gray-600">সর্বমোট অভিযোগ</span>
+                        <span class="font-bold text-red-600 text-sm">২টি</span>
+                    </div>
+                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded">
+                        <span class="text-gray-600">শীর্ষ দপ্তর</span>
+                        <span class="bg-red-50 text-red-700 px-2 py-0.5 rounded font-medium">সরকারী হাসপাতাল</span>
+                    </div>
+                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded">
+                        <span class="text-gray-600">শীর্ষ উপজেলা</span>
+                        <span class="bg-red-50 text-red-700 px-2 py-0.5 rounded font-medium">কিশোরগঞ্জ সদর</span>
+                    </div>
+                </div>
+            </div>
 
-        <!-- Complaints List Container -->
-        <div class="grid gap-6 md:grid-cols-2">
-            {% if complaints %}
-                {% for complaint in complaints %}
-                <div class="bg-white rounded-lg shadow-md p-6 border border-gray-200 hover:shadow-lg transition">
-                    <div class="flex justify-between items-start mb-3">
-                        <span class="bg-emerald-100 text-emerald-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">
-                            {{ complaint.upazila }}
-                        </span>
-                        <span class="text-xs text-gray-500">
-                            {{ complaint.created_at.strftime('%d %b, %Y') if complaint.created_at else '' }}
-                        </span>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">{{ complaint.title }}</h3>
-                    <p class="text-gray-600 text-sm mb-4 line-clamp-3">{{ complaint.description }}</p>
-                    
-                    {% if complaint.status %}
-                    <div class="text-xs font-semibold text-right">
-                        অবস্থা: <span class="text-emerald-600">{{ complaint.status }}</span>
-                    </div>
-                    {% endif %}
+            <!-- Last 30 Days Report Card -->
+            <div class="bg-white p-4 rounded-xl border border-blue-100 shadow-sm">
+                <div class="flex justify-between items-center mb-3 border-b pb-2">
+                    <h3 class="font-bold text-gray-800">গত ৩০ দিনের রিপোর্ট</h3>
+                    <span class="bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">১০০% নিশ্চিত</span>
                 </div>
-                {% endfor %}
-            {% else %}
-                <div class="col-span-full text-center py-12 bg-white rounded-lg border border-dashed border-gray-300">
-                    <i class="fas fa-inbox text-4xl text-gray-400 mb-3"></i>
-                    <p class="text-gray-500 font-medium">এখনো কোনো অভিযোগ জমা পড়েনি।</p>
+                <div class="space-y-2 text-xs">
+                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded">
+                        <span class="text-gray-600">সর্বমোট অভিযোগ</span>
+                        <span class="font-bold text-blue-600 text-sm">২টি</span>
+                    </div>
+                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded">
+                        <span class="text-gray-600">শীর্ষ দপ্তর</span>
+                        <span class="bg-blue-50 text-blue-700 px-2 py-0.5 rounded font-medium">সরকারী হাসপাতাল</span>
+                    </div>
+                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded">
+                        <span class="text-gray-600">শীর্ষ উপজেলা</span>
+                        <span class="bg-blue-50 text-blue-700 px-2 py-0.5 rounded font-medium">কিশোরগঞ্জ সদর</span>
+                    </div>
                 </div>
-            {% endif %}
+            </div>
+
+            <!-- Total Report Card -->
+            <div class="bg-white p-4 rounded-xl border border-amber-100 shadow-sm">
+                <div class="flex justify-between items-center mb-3 border-b pb-2">
+                    <h3 class="font-bold text-gray-800">সর্বমোট রিপোর্ট</h3>
+                    <span class="bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">১০০% নিশ্চিত</span>
+                </div>
+                <div class="space-y-2 text-xs">
+                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded">
+                        <span class="text-gray-600">সর্বমোট অভিযোগ</span>
+                        <span class="font-bold text-amber-600 text-sm">২টি</span>
+                    </div>
+                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded">
+                        <span class="text-gray-600">শীর্ষ দপ্তর</span>
+                        <span class="bg-amber-50 text-amber-800 px-2 py-0.5 rounded font-medium">সরকারী হাসপাতাল</span>
+                    </div>
+                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded">
+                        <span class="text-gray-600">শীর্ষ উপজেলা</span>
+                        <span class="bg-amber-50 text-amber-800 px-2 py-0.5 rounded font-medium">কিশোরগঞ্জ সদর</span>
+                    </div>
+                </div>
+            </div>
+
         </div>
-    </main>
+    </section>
 
-    <!-- Footer -->
-    <footer class="bg-slate-800 text-gray-300 py-6 text-center text-sm mt-auto">
-        <p>&copy; ২০২৬ জনতার খাতা - কিশোরগঞ্জ। সর্বস্বত্ব সংরক্ষিত।</p>
-    </footer>
-
-</body>
-</html>
+    <!-- Main Content Area: Sidebar + Complaints Feed -->
+    <main class="max-w-7xl mx-auto px-4 py-4 grid md:grid-cols-4 gap-6 flex-grow w-full">
+        
+        <!-- Left Sidebar: Thana Ledger -->
+        <aside class="md:col-span-1 bg-slate-900 text-white rounded-xl p-4 h-fit">
+            <div class="flex justify-between items-center mb-4 border-b border-slate-700 pb-2">
+                <h2 class="font-bold text-sm">কিশোরগঞ্জ থানা লেজার</h2>
+                <span class="bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded">রিপোর্ট</span>
+            </div>
+            <ul class="space-y-2 text-xs">
+                <li class="flex justify-between items-center bg-slate-800 p-2 rounded hover:bg-slate-700 cursor-pointer">
+                    <span>কিশোরগঞ্জ সদর</span>
+                    <span class="
